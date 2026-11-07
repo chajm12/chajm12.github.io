@@ -171,8 +171,6 @@ disqus_shortname: al-folio # put your disqus shortname
 # If you have blog posts published on medium.com or other external sources,
 # you can display them in your blog by adding a link to the RSS feed.
 # Optional: Set default categories and tags for posts from each source.
-blog_name: Jungmin's research notes
-blog_description: 언어 에이전트, SKILL, ALFWorld·마인크래프트 실험 기록
 external_sources: []
 
 # -----------------------------------------------------------------------------
