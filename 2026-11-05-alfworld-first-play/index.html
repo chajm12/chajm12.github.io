@@ -1,0 +1,237 @@
+<!DOCTYPE html> <html lang="ko"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지 | </title> <meta name="author" content="Jungmin Cha"> <meta name="description" content="LLM 에이전트를 돌리기 전에, 사람이 먼저 텍스트 게임을 풀어 보며 환경이 어디서 막히는지 기록했습니다."> <meta name="keywords" content="language agents, skill, ALFWorld, Minecraft, VLA, embodied AI"> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%A7%AD&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=3116ba77db9ee1581d05bb3e86fbf7f1"> <link rel="canonical" href="https://chajm12.github.io/2026-11-05-alfworld-first-play/"> <script src="/assets/js/theme.js?v=5286c3e4c334d0ecb8fc0c40ff4fa7ec"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?v=5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/repositories/">repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">CV </a> </li> <li class="nav-item "> <a class="nav-link" href="/teaching/">teaching </a> </li> <li class="nav-item "> <a class="nav-link" href="/people/">people </a> </li> <li class="nav-item dropdown "> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-nav-dropdown-toggle="true" aria-haspopup="true" aria-expanded="false">submenus </a> <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown"> <a class="dropdown-item " href="/books/">bookshelf</a> <div class="dropdown-divider"></div> <a class="dropdown-item " href="/blog/">blog</a> </div> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" type="button" title="Change theme" aria-label="Change color theme"> <i class="fa-half-sun-moon" id="light-toggle-system"></i> <i class="fa-solid fa-moon" id="light-toggle-dark"></i> <i class="fa-solid fa-sun" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지</h1> <p class="post-meta"> Created on November 05, 2026 </p> <p class="post-tags"> <i class="fa-solid fa-calendar fa-sm"></i> 2026   ·   <i class="fa-solid fa-hashtag fa-sm"></i> alfworld agent react reflexion   ·   <i class="fa-solid fa-tag fa-sm"></i> notes </p> </header> <article class="post-content"> <div id="markdown-content"> <blockquote> <p><strong>이 글에 대해</strong> 교수님 과제로 Agentic AI의 SKILL Action 연구를 시작하면서, 첫 번째 환경인 ALFWorld를 맥북에 설치하고 게임 한 판을 직접 플레이했습니다. ReAct·Reflexion 같은 LLM 에이전트를 돌리기 전에, 사람이 먼저 같은 게임을 풀어 보면 에이전트가 어디서 막힐지 미리 알 수 있다고 봤습니다. 게임 한 판(약 35스텝)의 관찰이라 일반화하기에는 표본이 작습니다.</p> </blockquote> <h2 id="1-alfworld가-무엇인가">1. ALFWorld가 무엇인가</h2> <p>ALFWorld는 집안일 과제를 텍스트 게임으로 푸는 환경입니다(<a href="https://arxiv.org/abs/2010.03768" rel="external nofollow noopener" target="_blank">Shridhar et al., ICLR 2021</a>). 원래는 ALFRED라는 3D 가상 집에서 로봇이 카메라를 보며 수행하는 과제인데, 같은 방과 같은 과제를 텍스트로도 만들어 둔 것입니다. 둘을 묶는 건 PDDL입니다. 방의 상태(“pot 1이 countertop 3 위에 있다”)와 행동 규칙(“cool을 하려면 냉장고 앞에 있어야 한다”)을 PDDL로 적어 두면, 같은 상태를 3D 장면으로도 문장으로도 보여줄 수 있습니다.</p> <ul> <li> <strong>관측</strong>: 방에 무엇이 있는지, 행동 결과가 무엇인지를 문장으로 줍니다.</li> <li> <strong>행동</strong>: 정해진 문법의 텍스트 명령입니다. <code class="language-plaintext highlighter-rouge">go to</code>, <code class="language-plaintext highlighter-rouge">open</code>, <code class="language-plaintext highlighter-rouge">take ... from</code>, <code class="language-plaintext highlighter-rouge">cool ... with</code> 등.</li> <li> <strong>과제 6유형</strong>: Pick, Clean, Heat, Cool, Look(Examine in Light), Pick Two.</li> <li> <strong>평가</strong>: 처음 보는 방으로 구성된 134개 게임(valid unseen)에서의 성공률. 에피소드당 최대 50스텝.</li> </ul> <p>ReAct와 Reflexion이 이 134개 게임으로 성공률을 보고하기 때문에, LLM 에이전트 연구에서는 사실상 표준 시험장으로 쓰입니다.</p> <h2 id="2-설치">2. 설치</h2> <p>맥북(Apple Silicon)에서 GPU 없이 설치했습니다. 세 번 막혔습니다.</p> <table> <thead> <tr> <th>#</th> <th>증상</th> <th>원인</th> <th>해결</th> </tr> </thead> <tbody> <tr> <td>1</td> <td><code class="language-plaintext highlighter-rouge">bad CPU type in executable: pip</code></td> <td>문서 권장대로 <code class="language-plaintext highlighter-rouge">CONDA_SUBDIR=osx-64</code>(인텔용) 환경을 만들었는데 Rosetta 2가 없었음</td> <td><code class="language-plaintext highlighter-rouge">softwareupdate --install-rosetta</code></td> </tr> <tr> <td>2</td> <td> <code class="language-plaintext highlighter-rouge">alfworld[full]</code> 설치 중 visdom 빌드 실패 (<code class="language-plaintext highlighter-rouge">No module named 'pkg_resources'</code>)</td> <td>setuptools 80부터 <code class="language-plaintext highlighter-rouge">pkg_resources</code>가 빠졌는데 visdom이 아직 씀. <code class="language-plaintext highlighter-rouge">[full]</code>은 3D 시각 환경과 학습용 패키지 묶음이라 텍스트 실험에는 불필요</td> <td> <code class="language-plaintext highlighter-rouge">pip install alfworld</code> (텍스트 전용)</td> </tr> <tr> <td>3</td> <td>spacy 설치 실패 (<code class="language-plaintext highlighter-rouge">No matching distribution found for thinc</code>)</td> <td>최신 spacy가 요구하는 thinc가 Python 3.10 이상 전용. 문서 예시는 3.9</td> <td>Python 3.10으로 환경 재생성</td> </tr> </tbody> </table> <p>최종 명령은 다음과 같습니다.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CONDA_SUBDIR</span><span class="o">=</span>osx-64 conda create <span class="nt">-n</span> alfworld <span class="nv">python</span><span class="o">=</span>3.10 <span class="nt">-y</span>
+conda activate alfworld
+pip <span class="nb">install </span>alfworld
+alfworld-download
+alfworld-play-tw
+</code></pre></div></div> <h2 id="3-게임-한-판">3. 게임 한 판</h2> <p><code class="language-plaintext highlighter-rouge">alfworld-play-tw</code>가 고른 게임은 학습용(train) 분할의 Cool &amp; Place 과제였습니다.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your task is to: cool some pot and put it in countertop.
+</code></pre></div></div> <p>방에는 cabinet 9개, drawer 9개, countertop 3개, stoveburner 4개, fridge, microwave 등이 있었습니다. pot은 countertop 3에 있었고, 거기까지 가는 데 약 25스텝을 썼습니다. 전체로는 약 35스텝 만에 성공했습니다.</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/alfworld_first_win-480.webp 480w,/assets/img/alfworld_first_win-800.webp 800w,/assets/img/alfworld_first_win-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/alfworld_first_win.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 게임 후반부. 냉장고 앞에 가서야 cool이 성공하고, put이 계속 실패하다가 help로 확인한 move 문법으로 끝납니다. </div> <h2 id="4-실패-다섯-가지">4. 실패 다섯 가지</h2> <h3 id="4-1-오타-불가능-없는-대상이-모두-같은-응답">4-1. 오타, 불가능, 없는 대상이 모두 같은 응답</h3> <p><code class="language-plaintext highlighter-rouge">go to stovenurner 2</code>(오타), <code class="language-plaintext highlighter-rouge">go to stoveburner 2</code>(존재하지만 이동 불가), <code class="language-plaintext highlighter-rouge">go to stoveburner 5</code>(존재하지 않음)가 전부 <code class="language-plaintext highlighter-rouge">Nothing happens.</code>였습니다. 환경 내부는 이유를 알지만 문장으로 구분해 주지 않습니다. 저도 오타를 고친 뒤 같은 명령을 두 번 더 쳤습니다. ALFWorld 논문에도 실패하거나 변화가 없는 행동은 모두 이 문장으로 처리한다고 적혀 있어, 설계상의 단순화입니다.</p> <h3 id="4-2-같은-이름-다른-조작">4-2. 같은 이름, 다른 조작</h3> <p>cabinet 1~3, 5, 6은 <code class="language-plaintext highlighter-rouge">open</code> 해야 안이 보였는데 cabinet 4는 가자마자 “On the cabinet 4”였습니다. 이름만으로는 열어야 하는 물건인지 알 수 없습니다. “cabinet은 열어야 한다”고 일반화하면 cabinet 4에서는 틀립니다.</p> <h3 id="4-3-말해-주지-않는-전제조건">4-3. 말해 주지 않는 전제조건</h3> <p>pot을 든 채 카운터 앞에서 <code class="language-plaintext highlighter-rouge">cool pot 1 with fridge 1</code>을 치면 <code class="language-plaintext highlighter-rouge">Nothing happens.</code>, 냉장고 앞으로 가서 치면 성공했습니다. PDDL의 cool 행동에 “냉장고 앞에 있어야 한다”는 전제조건이 있기 때문입니다. 환경은 이 조건을 알고 있지만 알려주지 않습니다.</p> <h3 id="4-4-탐색에-쓴-스텝">4-4. 탐색에 쓴 스텝</h3> <p>pot 위치를 몰라서 stoveburner, cabinet, shelf, countertop을 차례로 돌았습니다. 35스텝 중 약 25스텝이 탐색입니다. “부엌에서 pot은 보통 어디 있다”는 상식이나, “지난번엔 countertop 3에 있었다”는 기억이 있었다면 줄었을 스텝입니다. 앞의 것이 ReAct의 생각(Thought)이 하는 일이고, 뒤의 것이 Reflexion의 반성 메모가 하는 일입니다.</p> <h3 id="4-5-문법이-바뀌어-있었다">4-5. 문법이 바뀌어 있었다</h3> <p>마지막에 <code class="language-plaintext highlighter-rouge">put pot 1 in/on countertop 1</code>이 계속 <code class="language-plaintext highlighter-rouge">Nothing happens.</code>였습니다. <code class="language-plaintext highlighter-rouge">help</code>를 쳐 보니 이 버전(alfworld 0.4.2)은 <code class="language-plaintext highlighter-rouge">move (object) to (receptacle)</code>을 받습니다.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; move pot 1 to countertop 2
+You won!
+</code></pre></div></div> <p>ALFWorld 논문의 행동 목록과 ReAct 프롬프트 예시는 <code class="language-plaintext highlighter-rouge">put ... in/on</code> 문법입니다. 원본 프롬프트를 최신 패키지에 그대로 쓰면, 에이전트가 과제를 다 풀고 마지막 단계에서 실패할 수 있습니다. 재현 수치가 논문보다 낮게 나오면 이것부터 확인해야 합니다. 아직 실제 에이전트로 확인하지는 않았습니다.</p> <h2 id="5-정리">5. 정리</h2> <table> <thead> <tr> <th>#</th> <th>관찰</th> <th>유형</th> <th>관련 방법</th> </tr> </thead> <tbody> <tr> <td>1</td> <td>모든 실패가 <code class="language-plaintext highlighter-rouge">Nothing happens.</code> </td> <td>피드백 부재</td> <td>실패 원인을 언어로 추론해야 함</td> </tr> <tr> <td>2</td> <td>같은 이름, 다른 조작</td> <td>affordance 불투명</td> <td>과도한 일반화 위험</td> </tr> <tr> <td>3</td> <td>알려주지 않는 전제조건</td> <td>숨은 규칙</td> <td>ReAct few-shot 예시</td> </tr> <tr> <td>4</td> <td>탐색에 25스텝</td> <td>탐색 비효율</td> <td>ReAct의 상식 추론, Reflexion의 기억</td> </tr> <tr> <td>5</td> <td> <code class="language-plaintext highlighter-rouge">put</code> → <code class="language-plaintext highlighter-rouge">move</code> </td> <td>버전 불일치</td> <td>재현 전 확인 필요</td> </tr> </tbody> </table> <p>다음에는 ReAct를 같은 환경에서 돌려 보고, 위 다섯 가지 중 무엇을 LLM이 실제로 겪는지 확인할 계획입니다.</p> </div> </article> <br> <hr> <br> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <ul class="list-disc pl-7 my-3 space-y-2 marker:text-[var(--global-theme-color)]"> </ul> </div> </div> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Jungmin Cha. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "about",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-publications",
+          title: "publications",
+          description: "publications by categories in reversed chronological order. generated by jekyll-scholar.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-projects",
+          title: "projects",
+          description: "A growing collection of your cool projects.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/projects/";
+          },
+        },{id: "nav-repositories",
+          title: "repositories",
+          description: "Edit the `_data/repositories.yml` and change the `github_users` and `github_repos` lists to include your own GitHub profile and repositories.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/repositories/";
+          },
+        },{id: "nav-cv",
+          title: "CV",
+          description: "This is a description of the page. You can modify it in '_pages/cv.md'. You can also change or remove the top pdf download button.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/cv/";
+          },
+        },{id: "nav-teaching",
+          title: "teaching",
+          description: "Course materials, schedules, and resources for classes taught.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/teaching/";
+          },
+        },{id: "nav-people",
+          title: "people",
+          description: "members of the lab or group",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/people/";
+          },
+        },{id: "dropdown-bookshelf",
+              title: "bookshelf",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/books/";
+              },
+            },{id: "dropdown-blog",
+              title: "blog",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/blog/";
+              },
+            },{id: "books-the-godfather",
+          title: 'The Godfather',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/the_godfather/";
+            },},{id: "news-a-simple-inline-announcement",
+          title: 'A simple inline announcement.',
+          description: "",
+          section: "News",},{id: "news-a-long-announcement-with-details",
+          title: 'A long announcement with details',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/announcement_2/";
+            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
+          title: 'A simple inline announcement with Markdown emoji! <img class="emoji" title=":sparkles:" alt=":sparkles:" src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png" height="20" width="20"> <img class="emoji" title=":smile:" alt=":smile:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f604.png" height="20" width="20">',
+          description: "",
+          section: "News",},{id: "projects-project-1",
+          title: 'project 1',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/1_project/";
+            },},{id: "projects-project-2",
+          title: 'project 2',
+          description: "a project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/2_project/";
+            },},{id: "projects-project-3-with-very-long-name",
+          title: 'project 3 with very long name',
+          description: "a project that redirects to another website",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/3_project/";
+            },},{id: "projects-project-4",
+          title: 'project 4',
+          description: "another without an image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/4_project/";
+            },},{id: "projects-project-5",
+          title: 'project 5',
+          description: "a project with a background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/5_project/";
+            },},{id: "projects-project-6",
+          title: 'project 6',
+          description: "a project with no image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/6_project/";
+            },},{id: "projects-project-7",
+          title: 'project 7',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/7_project/";
+            },},{id: "projects-project-8",
+          title: 'project 8',
+          description: "an other project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/8_project/";
+            },},{id: "projects-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/9_project/";
+            },},{id: "teachings-data-science-fundamentals",
+          title: 'Data Science Fundamentals',
+          description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/data-science-fundamentals/";
+            },},{id: "teachings-introduction-to-machine-learning",
+          title: 'Introduction to Machine Learning',
+          description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-to-machine-learning/";
+            },},{
+        id: 'social-cv',
+        title: 'CV',
+        section: 'Socials',
+        handler: () => {
+          window.open("/assets/pdf/example_pdf.pdf", "_blank");
+        },
+      },{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-inspire',
+        title: 'Inspire HEP',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://inspirehep.net/authors/1010907", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-custom_social',
+        title: 'Custom_social',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.alberteinstein.com/", "_blank");
+        },
+      },{
+      id: 'light-theme',
+      title: 'Change theme to light',
+      description: 'Change the theme of the site to Light',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("light");
+      },
+    },
+    {
+      id: 'dark-theme',
+      title: 'Change theme to dark',
+      description: 'Change the theme of the site to Dark',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("dark");
+      },
+    },
+    {
+      id: 'system-theme',
+      title: 'Use system default theme',
+      description: 'Change the theme of the site to System Default',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("system");
+      },
+    },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>
