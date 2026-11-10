@@ -1,0 +1,284 @@
+<!DOCTYPE html> <html lang="ko"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기 | </title> <meta name="author" content="Jungmin Cha"> <meta name="description" content="ALFWorld 위에서 LLM 에이전트를 만든 두 논문을 같은 틀(데이터, 입력과 출력, SKILL, 평가, 언어적 문제)로 정리했습니다."> <meta name="keywords" content="language agents, skill, ALFWorld, Minecraft, VLA, embodied AI"> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%A7%AD&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=3116ba77db9ee1581d05bb3e86fbf7f1"> <link rel="canonical" href="https://chajm12.github.io/blog/2026/react-reflexion-papers/"> <script src="/assets/js/theme.js?v=5286c3e4c334d0ecb8fc0c40ff4fa7ec"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?v=5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/repositories/">repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">CV </a> </li> <li class="nav-item "> <a class="nav-link" href="/teaching/">teaching </a> </li> <li class="nav-item "> <a class="nav-link" href="/people/">people </a> </li> <li class="nav-item dropdown "> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-nav-dropdown-toggle="true" aria-haspopup="true" aria-expanded="false">submenus </a> <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown"> <a class="dropdown-item " href="/books/">bookshelf</a> <div class="dropdown-divider"></div> <a class="dropdown-item " href="/blog/">blog</a> </div> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" type="button" title="Change theme" aria-label="Change color theme"> <i class="fa-half-sun-moon" id="light-toggle-system"></i> <i class="fa-solid fa-moon" id="light-toggle-dark"></i> <i class="fa-solid fa-sun" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기</h1> <p class="post-meta"> Created on November 08, 2026 </p> <p class="post-tags"> <a href="/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/blog/tag/alfworld"> <i class="fa-solid fa-hashtag fa-sm"></i> alfworld</a>   <a href="/blog/tag/agent"> <i class="fa-solid fa-hashtag fa-sm"></i> agent</a>   <a href="/blog/tag/react"> <i class="fa-solid fa-hashtag fa-sm"></i> react</a>   <a href="/blog/tag/reflexion"> <i class="fa-solid fa-hashtag fa-sm"></i> reflexion</a>   <a href="/blog/tag/llm"> <i class="fa-solid fa-hashtag fa-sm"></i> llm</a>   <a href="/blog/tag/paper"> <i class="fa-solid fa-hashtag fa-sm"></i> paper</a>   ·   <a href="/blog/category/notes"> <i class="fa-solid fa-tag fa-sm"></i> notes</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <blockquote> <p><strong>이 글에 대해</strong> <a href="/blog/2026/alfworld-first-play/">지난 글</a>에서 ALFWorld를 직접 한 판 플레이하며 막힌 곳 다섯 가지를 적었습니다. 이번에는 같은 환경에서 LLM 에이전트를 만든 두 논문, ReAct와 Reflexion을 읽고 정리했습니다. 다음 글에서 Reflexion을 맥북 로컬 LLM으로 직접 돌려 봅니다.</p> </blockquote> <h2 id="1-세-논문의-흐름">1. 세 논문의 흐름</h2> <table> <thead> <tr> <th>논문</th> <th>한 일</th> <th>ALFWorld unseen 134게임</th> </tr> </thead> <tbody> <tr> <td>ALFWorld (ICLR 2021)</td> <td>시험장을 만들었다. 3D 집안일 과제를 텍스트 게임으로도 제공</td> <td>BUTLER 37% (모방학습)</td> </tr> <tr> <td>ReAct (ICLR 2023)</td> <td>생각을 쓰게 했다. 학습 없이 LLM + 풀이 예시 2개</td> <td>71% (PaLM-540B)</td> </tr> <tr> <td>Reflexion (NeurIPS 2023)</td> <td>실패를 글로 기억하게 했다. 반성문을 들고 같은 게임에 재도전</td> <td>97% (130/134, 12회 시도)</td> </tr> </tbody> </table> <p>앞 논문이 남긴 문제가 다음 논문의 출발점입니다.</p> <ul> <li>ALFWorld는 실패하면 <code class="language-plaintext highlighter-rouge">Nothing happens.</code> 한 문장만 줍니다. ReAct는 생각(think)을 글로 써서 목표와 진행 상황을 붙잡습니다.</li> <li>ReAct는 한 판이 끝나면 아무것도 기억하지 못합니다. Reflexion은 반성문으로 경험을 다음 판에 넘깁니다.</li> </ul> <p>세 논문에서 SKILL이 뜻하는 바도 다릅니다. ALFWorld에는 SKILL이라는 개념이 따로 없습니다. ReAct에서는 프롬프트 속 풀이 예시가 SKILL 역할을 하고, Reflexion에서는 자연어 반성 메모가 그 역할을 합니다.</p> <h2 id="2-react--생각과-행동을-번갈아">2. ReAct — 생각과 행동을 번갈아</h2> <p>Yao et al., ICLR 2023 (<a href="https://arxiv.org/abs/2210.03629" rel="external nofollow noopener" target="_blank">arXiv 2210.03629</a>, 코드 <a href="https://github.com/ysymyth/ReAct" rel="external nofollow noopener" target="_blank">ysymyth/ReAct</a>)</p> <p><strong>한 줄 요약.</strong> 생각(Reasoning)과 행동(Acting)을 번갈아 하게 하면 둘이 서로를 도와, 하나만 할 때보다 훨씬 잘합니다.</p> <h3 id="2-1-왜-둘을-섞나">2-1. 왜 둘을 섞나</h3> <ul> <li> <strong>생각만 하는 방식(Chain-of-Thought)</strong>은 바깥 세상을 확인하지 않아서 그럴듯한 거짓(환각)을 만듭니다.</li> <li> <strong>행동만 하는 방식(Act)</strong>은 목표와 진행 상황을 잃고 같은 곳을 맴돕니다.</li> <li> <strong>생각이 행동을 돕습니다.</strong> 목표를 쪼개고(“찾고 → 식히고 → 놓기”), 상식으로 탐색 순서를 정하고, 어디까지 했는지 추적합니다.</li> <li> <strong>행동이 생각을 돕습니다.</strong> “cabinet 6에 mug가 있다” 같은 실제 관측이 다음 생각의 근거가 되어 환각이 줄어듭니다.</li> </ul> <h3 id="2-2-동작-방식">2-2. 동작 방식</h3> <p>LLM은 매번 한 줄만 씁니다. 그 줄이 <code class="language-plaintext highlighter-rouge">think:</code>로 시작하면 코드가 게임에 보내지 않고 <code class="language-plaintext highlighter-rouge">OK.</code>만 돌려줍니다. 그 외의 줄은 행동으로 게임에 보냅니다.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">alfworld_run</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">ob</span><span class="o">=</span><span class="sh">''</span><span class="p">):</span>
+    <span class="n">init_prompt</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">+</span> <span class="n">ob</span> <span class="o">+</span> <span class="sh">'</span><span class="se">\n</span><span class="s">&gt;</span><span class="sh">'</span>      <span class="c1"># 풀이 예시 2개 + 첫 관측
+</span>    <span class="n">prompt</span> <span class="o">=</span> <span class="sh">''</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>                  <span class="c1"># 최대 50스텝
+</span>        <span class="n">action</span> <span class="o">=</span> <span class="nf">llm</span><span class="p">(</span><span class="n">init_prompt</span> <span class="o">+</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">])</span>
+        <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="nf">step</span><span class="p">([</span><span class="n">action</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">think:</span><span class="sh">'</span><span class="p">):</span>
+            <span class="n">observation</span> <span class="o">=</span> <span class="sh">'</span><span class="s">OK.</span><span class="sh">'</span>             <span class="c1"># 생각은 환경에 영향 없음
+</span>        <span class="n">prompt</span> <span class="o">+=</span> <span class="sa">f</span><span class="sh">'</span><span class="s"> </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">observation</span><span class="si">}</span><span class="se">\n</span><span class="s">&gt;</span><span class="sh">'</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span> <span class="k">return</span> <span class="n">reward</span>
+    <span class="k">return</span> <span class="mi">0</span>
+</code></pre></div></div> <p>공식 코드에서 ALFWorld 부분은 이 루프와 풀이 예시 파일(<code class="language-plaintext highlighter-rouge">alfworld_3prompts.json</code>)이 사실상 전부입니다. 예시는 태스크 유형 6가지마다 3개씩 있고, 그중 2개를 고르는 조합 6가지로 돌린 결과 중 가장 좋은 것이 “best of 6”입니다.</p> <h3 id="2-3-결과">2-3. 결과</h3> <table> <thead> <tr> <th>방법 (PaLM-540B, 학습 없음)</th> <th>Pick</th> <th>Clean</th> <th>Heat</th> <th>Cool</th> <th>Look</th> <th>Pick2</th> <th>전체</th> </tr> </thead> <tbody> <tr> <td>BUTLER (모방학습, best of 8)</td> <td>46</td> <td>39</td> <td>74</td> <td>100</td> <td>22</td> <td>24</td> <td>37</td> </tr> <tr> <td>Act — 예시에서 think만 삭제 (best of 6)</td> <td>88</td> <td>42</td> <td>74</td> <td>67</td> <td>72</td> <td>41</td> <td>45</td> </tr> <tr> <td>ReAct-IM — 매 스텝 생각 (best of 6)</td> <td>62</td> <td>68</td> <td>87</td> <td>57</td> <td>39</td> <td>33</td> <td>53</td> </tr> <tr> <td>ReAct (평균)</td> <td>65</td> <td>39</td> <td>83</td> <td>76</td> <td>55</td> <td>24</td> <td>57</td> </tr> <tr> <td><strong>ReAct (best of 6)</strong></td> <td><strong>92</strong></td> <td><strong>58</strong></td> <td><strong>96</strong></td> <td><strong>86</strong></td> <td><strong>78</strong></td> <td><strong>41</strong></td> <td><strong>71</strong></td> </tr> </tbody> </table> <ul> <li>생각만 빼면 71%가 45%로 떨어집니다.</li> <li>매 스텝 촘촘히 생각하게 하면(ReAct-IM) 53%입니다. 생각은 많이 하는 것보다 필요한 순간에 목적을 갖고 하는 게 중요합니다.</li> <li>학습 없이 예시 2개만으로 모방학습 모델 BUTLER(37%)를 크게 넘었습니다.</li> </ul> <h3 id="2-4-공통-틀로-보면">2-4. 공통 틀로 보면</h3> <table> <thead> <tr> <th>항목</th> <th>내용</th> </tr> </thead> <tbody> <tr> <td>데이터</td> <td>학습 데이터 없음. 사람이 쓴 유형별 풀이 예시(ALFWorld train에서)</td> </tr> <tr> <td>입력 → 출력</td> <td>예시 2개 + 지금까지의 기록 → 다음 한 줄 (행동 또는 <code class="language-plaintext highlighter-rouge">think:</code>)</td> </tr> <tr> <td>SKILL</td> <td>별도 라이브러리 없음. few-shot 예시가 유형별 풀이 템플릿 역할 (가중치 학습 없음)</td> </tr> <tr> <td>평가</td> <td>성공률. PaLM-540B best of 6 71%, GPT-3(text-davinci-002) 78.4%</td> </tr> <tr> <td>언어적 문제</td> <td>해결: 목표와 진행을 언어로 붙잡아 둠. 미해결: 한 판의 실패 경험이 다음 판으로 이어지지 않음</td> </tr> </tbody> </table> <p><strong>읽으며 확인한 것.</strong> 공식 프롬프트의 놓기 행동은 모두 <code class="language-plaintext highlighter-rouge">put X in/on Y</code> 문법입니다. 그런데 지난 글에서 본 것처럼 최신 alfworld(0.4.2)는 <code class="language-plaintext highlighter-rouge">move X to Y</code>만 받습니다. 원본 프롬프트를 그대로 쓰면 에이전트가 태스크를 거의 다 풀고 마지막 단계에서 실패할 것이라고 예상했습니다. 이 예상은 다음 글에서 확인합니다.</p> <h2 id="3-reflexion--실패를-글로-기억하게">3. Reflexion — 실패를 글로 기억하게</h2> <p>Shinn et al., NeurIPS 2023 (<a href="https://arxiv.org/abs/2303.11366" rel="external nofollow noopener" target="_blank">arXiv 2303.11366</a>, 코드 <a href="https://github.com/noahshinn/reflexion" rel="external nofollow noopener" target="_blank">noahshinn/reflexion</a>)</p> <p><strong>한 줄 요약.</strong> 모델의 가중치를 바꾸는 대신, 실패를 반성문(자연어)으로 적어 기억에 넣고 같은 문제에 다시 도전합니다. 논문은 이것을 언어적 강화학습(verbal reinforcement learning)이라고 부릅니다.</p> <h3 id="3-1-네-가지-부품">3-1. 네 가지 부품</h3> <table> <thead> <tr> <th>부품</th> <th>하는 일</th> </tr> </thead> <tbody> <tr> <td>Actor</td> <td>ReAct 에이전트가 게임을 플레이. 그 판의 기록이 단기 기억</td> </tr> <tr> <td>Evaluator</td> <td>성공/실패 판정. ALFWorld에서는 휴리스틱으로, 같은 행동·같은 결과가 3회 넘게 반복되거나 행동이 30개를 넘으면 실패로 봄</td> </tr> <tr> <td>Self-Reflection</td> <td>LLM이 실패한 기록을 읽고 “무엇이 틀렸고 다음엔 어떻게 할지” 반성문 작성</td> </tr> <tr> <td>Memory</td> <td>반성문을 쌓아 다음 시도 프롬프트 앞에 붙임 (최근 3개까지)</td> </tr> </tbody> </table> <p>한 게임을 기준으로 흐름을 정리하면 이렇습니다.</p> <ol> <li> <strong>1차 시도</strong>: 예시를 보고 게임을 플레이했다가 실패합니다.</li> <li> <strong>반성</strong>: 1차 기록을 읽고 “왜 실패했고 다음엔 어떻게 할지” 반성문을 씁니다.</li> <li> <strong>2차 시도</strong>: 예시와 반성문을 들고 같은 게임을 처음부터 다시 합니다.</li> <li> <strong>반복</strong>: 또 실패하면 반성문을 하나 더 쌓아 다시 도전합니다.</li> </ol> <h3 id="3-2-결과">3-2. 결과</h3> <ul> <li>ALFWorld에서 ReAct + Reflexion이 134게임 중 <strong>130게임(97%)</strong>을 풀었습니다. 12번 연속 시도한 결과이고, ReAct만 쓴 것보다 절대 +22%p 높습니다.</li> <li>질의응답(HotpotQA)에서 +20%p, 코드 생성(HumanEval)에서 pass@1 91%를 냈습니다. 같은 시기 GPT-4는 80%였습니다.</li> </ul> <h3 id="3-3-공통-틀로-보면">3-3. 공통 틀로 보면</h3> <table> <thead> <tr> <th>항목</th> <th>내용</th> </tr> </thead> <tbody> <tr> <td>데이터</td> <td>학습 없음. ReAct 예시 + 반성문 예시(few-shot)</td> </tr> <tr> <td>입력 → 출력</td> <td>실패한 기록 → 반성문(자연어) → 다음 시도 프롬프트에 <code class="language-plaintext highlighter-rouge">Your memory for the task below:</code>로 추가</td> </tr> <tr> <td>SKILL</td> <td>자연어 반성 메모. 그 게임 하나에 대한 경험 기록이고, 다른 게임에 쓰는 기술 라이브러리는 아님</td> </tr> <tr> <td>평가</td> <td>시도 횟수에 따른 누적 성공률</td> </tr> <tr> <td>언어적 문제</td> <td>반성문이 실패 원인을 맞게 짚는다는 가정 위에 서 있음</td> </tr> </tbody> </table> <p><strong>읽으며 궁금했던 것.</strong> 마지막 줄이 핵심이었습니다. ALFWorld는 실패 이유를 말해 주지 않습니다(<code class="language-plaintext highlighter-rouge">Nothing happens.</code>). 그런데도 반성문이 진짜 원인을 짚을 수 있을까요? 다음 글에서 직접 돌려 보며 반성문을 하나하나 읽었습니다.</p> <h2 id="4-정리">4. 정리</h2> <ul> <li>ReAct: 언어(생각)가 행동 선택을 바꾼다는 기초 증거입니다. think를 빼면 71%가 45%로 떨어집니다.</li> <li>Reflexion: 언어(반성문)로 경험을 다음 시도에 넘깁니다. 12회 시도로 97%를 냈습니다.</li> <li>두 논문 모두 언어가 정확하다는 가정 위에 서 있습니다. 예시 문법이 환경과 맞아야 하고, 반성문이 원인을 맞혀야 합니다. 다음 두 글은 이 가정이 깨질 때 어떤 일이 생기는지에 대한 기록입니다.</li> </ul> </div> </article> <br> <hr> <br> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <ul class="list-disc pl-7 my-3 space-y-2 marker:text-[var(--global-theme-color)]"> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/one-word-success-rate/">단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/reflexion-local-ollama/">Reflexion을 맥북 로컬 LLM으로 돌려 보기 — 15판 0승, 그런데 마지막 한 줄만 틀렸다</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/alfworld-first-play/">ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지</a> </li> </ul> </div> </div> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Jungmin Cha. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "about",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-publications",
+          title: "publications",
+          description: "publications by categories in reversed chronological order. generated by jekyll-scholar.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-projects",
+          title: "projects",
+          description: "A growing collection of your cool projects.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/projects/";
+          },
+        },{id: "nav-repositories",
+          title: "repositories",
+          description: "Edit the `_data/repositories.yml` and change the `github_users` and `github_repos` lists to include your own GitHub profile and repositories.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/repositories/";
+          },
+        },{id: "nav-cv",
+          title: "CV",
+          description: "This is a description of the page. You can modify it in '_pages/cv.md'. You can also change or remove the top pdf download button.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/cv/";
+          },
+        },{id: "nav-teaching",
+          title: "teaching",
+          description: "Course materials, schedules, and resources for classes taught.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/teaching/";
+          },
+        },{id: "nav-people",
+          title: "people",
+          description: "members of the lab or group",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/people/";
+          },
+        },{id: "dropdown-bookshelf",
+              title: "bookshelf",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/books/";
+              },
+            },{id: "dropdown-blog",
+              title: "blog",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/blog/";
+              },
+            },{id: "post-단어-하나가-바꾼-성공률-reflexion-통제-실험-5-8",
+        
+          title: "단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8",
+        
+        description: "같은 모델, 같은 20게임에서 태스크 지시문의 동사 하나를 바꾸자 성공률이 45%에서 80%로, 환경 쪽에서 문법을 번역하자 100%가 됐습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/one-word-success-rate/";
+          
+        },
+      },{id: "post-reflexion을-맥북-로컬-llm으로-돌려-보기-15판-0승-그런데-마지막-한-줄만-틀렸다",
+        
+          title: "Reflexion을 맥북 로컬 LLM으로 돌려 보기 — 15판 0승, 그런데 마지막 한 줄만...",
+        
+        description: "공식 Reflexion 코드의 LLM 호출부만 Ollama + Qwen2.5-7B로 바꿔 ALFWorld를 돌리고, 실패 원인을 통제 실험 네 개로 좁혔습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reflexion-local-ollama/";
+          
+        },
+      },{id: "post-react와-reflexion-논문-정리-생각을-쓰게-하고-실패를-글로-기억하게-하기",
+        
+          title: "ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기",
+        
+        description: "ALFWorld 위에서 LLM 에이전트를 만든 두 논문을 같은 틀(데이터, 입력과 출력, SKILL, 평가, 언어적 문제)로 정리했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/react-reflexion-papers/";
+          
+        },
+      },{id: "post-alfworld를-직접-플레이하며-찾은-실패-다섯-가지",
+        
+          title: "ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지",
+        
+        description: "LLM 에이전트를 돌리기 전에, 사람이 먼저 텍스트 게임을 풀어 보며 환경이 어디서 막히는지 기록했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/alfworld-first-play/";
+          
+        },
+      },{id: "books-the-godfather",
+          title: 'The Godfather',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/the_godfather/";
+            },},{id: "news-a-simple-inline-announcement",
+          title: 'A simple inline announcement.',
+          description: "",
+          section: "News",},{id: "news-a-long-announcement-with-details",
+          title: 'A long announcement with details',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/announcement_2/";
+            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
+          title: 'A simple inline announcement with Markdown emoji! <img class="emoji" title=":sparkles:" alt=":sparkles:" src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png" height="20" width="20"> <img class="emoji" title=":smile:" alt=":smile:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f604.png" height="20" width="20">',
+          description: "",
+          section: "News",},{id: "projects-project-1",
+          title: 'project 1',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/1_project/";
+            },},{id: "projects-project-2",
+          title: 'project 2',
+          description: "a project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/2_project/";
+            },},{id: "projects-project-3-with-very-long-name",
+          title: 'project 3 with very long name',
+          description: "a project that redirects to another website",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/3_project/";
+            },},{id: "projects-project-4",
+          title: 'project 4',
+          description: "another without an image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/4_project/";
+            },},{id: "projects-project-5",
+          title: 'project 5',
+          description: "a project with a background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/5_project/";
+            },},{id: "projects-project-6",
+          title: 'project 6',
+          description: "a project with no image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/6_project/";
+            },},{id: "projects-project-7",
+          title: 'project 7',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/7_project/";
+            },},{id: "projects-project-8",
+          title: 'project 8',
+          description: "an other project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/8_project/";
+            },},{id: "projects-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/9_project/";
+            },},{id: "teachings-data-science-fundamentals",
+          title: 'Data Science Fundamentals',
+          description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/data-science-fundamentals/";
+            },},{id: "teachings-introduction-to-machine-learning",
+          title: 'Introduction to Machine Learning',
+          description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-to-machine-learning/";
+            },},{
+        id: 'social-cv',
+        title: 'CV',
+        section: 'Socials',
+        handler: () => {
+          window.open("/assets/pdf/example_pdf.pdf", "_blank");
+        },
+      },{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-inspire',
+        title: 'Inspire HEP',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://inspirehep.net/authors/1010907", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-custom_social',
+        title: 'Custom_social',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.alberteinstein.com/", "_blank");
+        },
+      },{
+      id: 'light-theme',
+      title: 'Change theme to light',
+      description: 'Change the theme of the site to Light',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("light");
+      },
+    },
+    {
+      id: 'dark-theme',
+      title: 'Change theme to dark',
+      description: 'Change the theme of the site to Dark',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("dark");
+      },
+    },
+    {
+      id: 'system-theme',
+      title: 'Use system default theme',
+      description: 'Change the theme of the site to System Default',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("system");
+      },
+    },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>

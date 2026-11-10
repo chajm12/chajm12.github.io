@@ -1,0 +1,315 @@
+<!DOCTYPE html> <html lang="ko"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> 단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8 | </title> <meta name="author" content="Jungmin Cha"> <meta name="description" content="같은 모델, 같은 20게임에서 태스크 지시문의 동사 하나를 바꾸자 성공률이 45%에서 80%로, 환경 쪽에서 문법을 번역하자 100%가 됐습니다."> <meta name="keywords" content="language agents, skill, ALFWorld, Minecraft, VLA, embodied AI"> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%A7%AD&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=3116ba77db9ee1581d05bb3e86fbf7f1"> <link rel="canonical" href="https://chajm12.github.io/blog/2026/one-word-success-rate/"> <script src="/assets/js/theme.js?v=5286c3e4c334d0ecb8fc0c40ff4fa7ec"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?v=5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/repositories/">repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">CV </a> </li> <li class="nav-item "> <a class="nav-link" href="/teaching/">teaching </a> </li> <li class="nav-item "> <a class="nav-link" href="/people/">people </a> </li> <li class="nav-item dropdown "> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-nav-dropdown-toggle="true" aria-haspopup="true" aria-expanded="false">submenus </a> <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown"> <a class="dropdown-item " href="/books/">bookshelf</a> <div class="dropdown-divider"></div> <a class="dropdown-item " href="/blog/">blog</a> </div> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" type="button" title="Change theme" aria-label="Change color theme"> <i class="fa-half-sun-moon" id="light-toggle-system"></i> <i class="fa-solid fa-moon" id="light-toggle-dark"></i> <i class="fa-solid fa-sun" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8</h1> <p class="post-meta"> Created on November 10, 2026 </p> <p class="post-tags"> <a href="/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/blog/tag/alfworld"> <i class="fa-solid fa-hashtag fa-sm"></i> alfworld</a>   <a href="/blog/tag/agent"> <i class="fa-solid fa-hashtag fa-sm"></i> agent</a>   <a href="/blog/tag/reflexion"> <i class="fa-solid fa-hashtag fa-sm"></i> reflexion</a>   <a href="/blog/tag/ollama"> <i class="fa-solid fa-hashtag fa-sm"></i> ollama</a>   <a href="/blog/tag/qwen"> <i class="fa-solid fa-hashtag fa-sm"></i> qwen</a>   <a href="/blog/tag/llm"> <i class="fa-solid fa-hashtag fa-sm"></i> llm</a>   <a href="/blog/tag/prompt"> <i class="fa-solid fa-hashtag fa-sm"></i> prompt</a>   ·   <a href="/blog/category/notes"> <i class="fa-solid fa-tag fa-sm"></i> notes</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <blockquote> <p><strong>이 글에 대해</strong> <a href="/blog/2026/reflexion-local-ollama/">앞 글</a>의 질문을 이어서 풉니다. 프롬프트 예시에서 put을 다 지웠는데도 Qwen은 왜 <code class="language-plaintext highlighter-rouge">put … in/on</code>을 썼을까요? 환경 파일과 프롬프트 구조를 직접 열어 보고, 같은 20게임에서 한 번에 한 가지만 바꾸는 실험을 네 개 더 돌렸습니다. 모델은 qwen2.5:7b 하나, 실행은 한 번씩입니다.</p> </blockquote> <p><strong>용어.</strong> 이 글에서 <strong>태스크</strong>는 ALFWorld 게임 한 판에서 풀어야 할 일입니다. <strong>태스크 지시문</strong>은 화면에 나오는 <code class="language-plaintext highlighter-rouge">Your task is to: …</code> 뒤의 문장이고, 코드에서는 <code class="language-plaintext highlighter-rouge">task_desc</code>라고 부릅니다.</p> <h2 id="1-환경은-어디에-저장되고-어떻게-불러오나">1. 환경은 어디에 저장되고 어떻게 불러오나</h2> <p>ALFWorld 데이터(약 2.2GB)는 <code class="language-plaintext highlighter-rouge">~/.cache/alfworld</code>에 있습니다.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/.cache/alfworld/
+├── logic/
+│   ├── alfred.pddl     ← 행동 규칙 (cool은 냉장고 앞에서만 등 전제조건)
+│   └── alfred.twl2     ← 문장 틀 ("move {o} to {r}", "You move the {o} to the {r}.")
+└── json_2.1.1/{train, valid_seen, valid_unseen}/
+    └── pick_cool_then_place_in_recep-Bread-.../trial_.../
+        ├── game.tw-pddl    ← 게임 한 판 (규칙 · 문장 틀 · 초기 상태와 목표 · 정답 풀이)
+        └── traj_data.json  ← 원래 ALFRED 데이터
+</code></pre></div></div> <p>불러오는 순서는 이렇습니다.</p> <ol> <li>설정 파일(<code class="language-plaintext highlighter-rouge">base_config.yaml</code>)에서 데이터 경로를 읽습니다.</li> <li> <code class="language-plaintext highlighter-rouge">get_environment("AlfredTWEnv")</code>가 <code class="language-plaintext highlighter-rouge">valid_unseen</code> 폴더의 게임 파일들을 모읍니다.</li> <li> <code class="language-plaintext highlighter-rouge">env.reset()</code>이 다음 <code class="language-plaintext highlighter-rouge">game.tw-pddl</code>을 열어 첫 화면 문장을 돌려줍니다. 이 문장 끝에 <code class="language-plaintext highlighter-rouge">Your task is to: …</code>가 붙어 있습니다.</li> <li>에이전트 코드가 그 문장을 프롬프트 끝에 붙입니다.</li> <li>매 행동(<code class="language-plaintext highlighter-rouge">env.step</code>)마다 환경이 처리합니다. <ul> <li>문장 틀로 명령을 해석합니다.</li> <li>PDDL 규칙으로 전제조건을 확인합니다.</li> <li>결과 문장을 돌려줍니다. 해석이 안 되거나 조건이 안 맞으면 <code class="language-plaintext highlighter-rouge">Nothing happens.</code>입니다.</li> </ul> </li> </ol> <p><strong>태스크 지시문은 게임 파일에 이미 박혀 있습니다.</strong> alfworld 패키지의 <code class="language-plaintext highlighter-rouge">gen/goal_library.py</code>에 있는 틀(<code class="language-plaintext highlighter-rouge">'put a cool {obj} in {recep}'</code>, <code class="language-plaintext highlighter-rouge">'cool some {obj} and put it in {recep}'</code>) 중 하나를 골라 게임 파일을 만들 때 넣어 둡니다. 반면 <strong>성공 판정은 이 문장이 아니라 PDDL 목표(논리식)</strong>로 합니다. 그래서 지시문을 바꿔도 채점 기준은 그대로입니다.</p> <p>환경 안에서부터 말이 어긋나 있는 셈입니다. 지시문 틀은 아직 <code class="language-plaintext highlighter-rouge">put</code>인데, 명령 틀은 <code class="language-plaintext highlighter-rouge">move</code>로 바뀌었습니다.</p> <h2 id="2-llm이-받는-프롬프트에는-태스크-지시문이-세-번-나온다">2. LLM이 받는 프롬프트에는 태스크 지시문이 세 번 나온다</h2> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Interact with a household to solve a task. Here are two examples.
+
+[예시 1] You are in the middle of a room ...
+         Your task is to: put some spraybottle on toilet.            ① 예시 파일
+         &gt; go to cabinet 1 ...   (정답 풀이 기록)
+[예시 2] ...
+         Your task is to: find some apple and put it in sidetable.   ② 예시 파일
+
+Your memory for the task below:
+Trial 0: ... (반성문, 최근 3개까지)
+
+Here is the task:
+         You are in the middle of a room ...
+         Your task is to: put a cool bread in countertop.            ③ env.reset()
+&gt;
+</code></pre></div></div> <p>①②는 예시 파일(ReAct 저자가 미리 적어 둔 다른 게임의 풀이)에서, ③은 지금 풀 게임 파일에서 옵니다. 앞 글의 실험 4까지는 ①②③에 put이 그대로 남아 있었습니다.</p> <p>무엇을 바꾸느냐에 따라 실험의 의미도 달라집니다.</p> <table> <thead> <tr> <th>층</th> <th>바꾸는 것</th> <th>이 글의 실험</th> <th>의미</th> </tr> </thead> <tbody> <tr> <td>환경</td> <td>게임이 알아듣는 명령 규칙</td> <td>실험 7 코드 번역</td> <td>게임이 put을 받던 논문 당시 조건을 재현 → 기준점</td> </tr> <tr> <td>태스크 (지시문)</td> <td>에이전트에게 주는 목표 문장</td> <td>실험 5 지시문까지 move</td> <td>시험 문제를 고쳐 쓴 것 → 벤치마크 점수로는 못 씀, 원인 분석용</td> </tr> <tr> <td>에이전트</td> <td>프롬프트 예시·지시</td> <td>실험 2–4, 실험 8 프롬프트 힌트</td> <td>참고서를 바꾼 것 → 프롬프트 엔지니어링</td> </tr> </tbody> </table> <h2 id="3-실험-58">3. 실험 5–8</h2> <table> <thead> <tr> <th>실험</th> <th>예시(few-shot)</th> <th>태스크 지시문</th> <th>put 처리</th> </tr> </thead> <tbody> <tr> <td>4 (앞 글)</td> <td>move (지시문 줄만 put)</td> <td>put</td> <td>없음</td> </tr> <tr> <td>5</td> <td>전부 move</td> <td><strong>move</strong></td> <td>LLM이 보는 글자에 put 0개</td> </tr> <tr> <td>7 코드 번역</td> <td>put (원본)</td> <td>put (원본)</td> <td>Qwen이 쓴 <code class="language-plaintext highlighter-rouge">put X in/on Y</code>를 게임에 보내기 직전 코드가 <code class="language-plaintext highlighter-rouge">move X to Y</code>로 번역</td> </tr> <tr> <td>8 프롬프트 힌트</td> <td>put (원본)</td> <td>put (원본)</td> <td>프롬프트 맨 앞에 힌트 한 줄 추가</td> </tr> </tbody> </table> <p>실험 7의 번역은 LLM이 아니라 정규식 한 줄로 했습니다. 바꿀 형태가 정해져 있어서 규칙이면 충분하고, 빠르고 틀리지 않습니다. 기록에는 Qwen이 쓴 put을 그대로 남기므로, Qwen은 자기가 쓴 put이 통했다고만 알게 됩니다.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">TRANSLATE</span> <span class="ow">and</span> <span class="n">action</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">put </span><span class="sh">'</span><span class="p">):</span>
+    <span class="n">action_env</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">^put (.+?) (?:in/on|into|in|on) (.+)$</span><span class="sh">'</span><span class="p">,</span> <span class="sa">r</span><span class="sh">'</span><span class="s">move \1 to \2</span><span class="sh">'</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<span class="n">env</span><span class="p">.</span><span class="nf">step</span><span class="p">([</span><span class="n">action_env</span><span class="p">])</span>     <span class="c1"># put tomato 1 in/on microwave 1 → move tomato 1 to microwave 1
+</span></code></pre></div></div> <p>실험 8에서 프롬프트 맨 앞에 넣은 힌트 문장은 이것입니다.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Note: this environment does not accept 'put (object) in/on (receptacle)'.
+To place an object, use 'move (object) to (receptacle)' instead.
+</code></pre></div></div> <h2 id="4-결과--같은-20게임">4. 결과 — 같은 20게임</h2> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/reflexion_success_rates-480.webp 480w,/assets/img/reflexion_success_rates-800.webp 800w,/assets/img/reflexion_success_rates-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/reflexion_success_rates.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> ALFWorld valid unseen 앞 20게임, qwen2.5:7b, 게임당 최대 3회 시도. </div> <table> <thead> <tr> <th>실험</th> <th>첫 시도</th> <th>2회 후</th> <th>3회 후</th> <th>put 명령</th> <th>move 명령</th> </tr> </thead> <tbody> <tr> <td>4 예시만 move</td> <td>4/20</td> <td>6/20</td> <td>9/20</td> <td>121</td> <td>7</td> </tr> <tr> <td>8 프롬프트 힌트</td> <td>6/20</td> <td>9/20</td> <td>10/20</td> <td>67</td> <td>82</td> </tr> <tr> <td>5 지시문까지 move</td> <td>13/20</td> <td>15/20</td> <td>16/20</td> <td>18</td> <td>61</td> </tr> <tr> <td><strong>7 코드 번역</strong></td> <td><strong>18/20</strong></td> <td><strong>19/20</strong></td> <td><strong>20/20</strong></td> <td>18 (전부 번역되어 성공)</td> <td>0</td> </tr> </tbody> </table> <p><strong>1) 태스크 지시문의 동사 하나로 45%가 80%가 됐습니다.</strong> 첫 시도만 보면 20%에서 65%입니다. Reflexion으로 3번 시도해서 오른 폭(+25%p)보다 동사 하나를 바꾼 효과(+35%p)가 더 컸습니다. 앞 글에서 남은 질문의 답은 “put의 상당 부분은 태스크 지시문에서 왔다”입니다.</p> <p><strong>2) 원본 그대로 두고 번역만 하면 20/20이었습니다.</strong> Qwen은 게임마다 put을 딱 한 번, 맞는 자리에서만 썼습니다. 원본 프롬프트의 실패는 거의 전부 모델 능력이 아니라 환경 버전의 문법 차이 때문이었습니다. 흥미롭게도 프롬프트를 move로 고친 것(80%)보다 원본을 그대로 두고 번역한 것(100%)이 더 잘 됐습니다. 예시를 고치면 상태 추적 실수가 늘었습니다. Qwen이 원본 ReAct 프롬프트 형식에 가장 익숙하다는 뜻일 수 있습니다.</p> <p><strong>3) 힌트 한 줄은 예시 36줄을 거의 이기지 못했습니다(50%).</strong> Qwen은 put과 move를 섞어 썼습니다. 실패한 판 33개 중 28개에서 put을 먼저 썼고, put이 실패한 뒤에야 move를 꺼냈습니다.</p> <p><strong>4) 태스크 유형별로 보면 Clean이 약점입니다.</strong> 지시문까지 move로 바꾼 실험 5에서 끝까지 실패한 4게임 중 3게임이 Clean 태스크였습니다.</p> <table> <thead> <tr> <th>태스크 유형</th> <th>실험 4</th> <th>실험 5</th> </tr> </thead> <tbody> <tr> <td>Pick &amp; Place</td> <td>3/6</td> <td>6/6</td> </tr> <tr> <td>Heat</td> <td>1/3</td> <td>3/3</td> </tr> <tr> <td>Cool</td> <td>1/5</td> <td>4/5</td> </tr> <tr> <td>Clean</td> <td>2/4</td> <td>1/4</td> </tr> <tr> <td>Look (desklamp)</td> <td>2/2</td> <td>2/2</td> </tr> </tbody> </table> <h2 id="5-실패-분석--문법이-풀리면-다음은-상태-추적">5. 실패 분석 — 문법이 풀리면 다음은 상태 추적</h2> <p>실패한 판의 행동을 따라가며, 들고 있는 물건과 현재 위치를 추적하는 스크립트를 짰습니다. 그리고 <code class="language-plaintext highlighter-rouge">Nothing happens.</code>가 나온 행동을 규칙으로 분류했습니다. 규칙 기반이라 근사치입니다.</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/reflexion_failure_types-480.webp 480w,/assets/img/reflexion_failure_types-800.webp 800w,/assets/img/reflexion_failure_types-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/reflexion_failure_types.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="lazy" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <p>문법 실패가 줄어들수록 <strong>내가 지금 무엇을 들고 있는지</strong>를 놓치는 실패가 중심이 됩니다. 이미 들고 있는데 또 집으려 하거나, 집지 않은 채 move나 clean을 합니다. 환경은 이것도 <code class="language-plaintext highlighter-rouge">Nothing happens.</code> 한 문장으로만 알려 줍니다. <a href="/blog/2026/alfworld-first-play/">첫 글</a>에서 직접 플레이하며 겪은 실패와 같은 종류입니다.</p> <p>로그를 직접 읽으며 본 장면들입니다.</p> <p><strong>같은 단어, 다른 뜻 범위 (실험 8)</strong></p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; use desklamp 1
+You turn on the desklamp 1.
+&gt; move bowl 2 to desk 1
+Nothing happens.
+</code></pre></div></div> <p>일상 영어의 move는 “집어서 옮겨 놓기”까지 뜻하지만, 환경의 move는 “들고 있는 것을 놓기”만 뜻합니다. 집지 않은 채 move를 쓴 횟수가 57회였습니다.</p> <p><strong>생각과 명령이 따로 논다 (실험 8)</strong></p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; think: I will put the clean spatula 1 on the shelf 3.
+&gt; move spatula 1 to shelf 3
+Nothing happens.
+</code></pre></div></div> <p>생각에는 put이라고 쓰고, 명령은 move로 합니다. 힌트는 명령어에만 반영되고 계획을 세우는 말은 그대로였습니다.</p> <p><strong>프롬프트에 없는 put (실험 5)</strong></p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; cool tomato 1 with microwave 1
+Nothing happens.
+&gt; think: ... I will place the tomato on the countertop instead.
+&gt; put tomato 1 on countertop 2
+</code></pre></div></div> <p>예시에도 태스크 지시문에도 put이 없는데, 계획이 틀어지자 일상 영어로 돌아갔습니다. 이 게임에서 17번 나왔습니다.</p> <p><strong>반성문 복사 (실험 5·6)</strong></p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Trial 0: ...I was unsuccessful in finding a clean plate...
+Trial 1: (글자까지 동일)
+Trial 2: (글자까지 동일)
+</code></pre></div></div> <p>반성문은 이번에도 진짜 원인(안 집음, 위치)을 짚지 못했습니다. 실험 5의 반성문 16개 중 6개가 바로 앞 시도의 반성문을 그대로 복사한 것이었습니다.</p> <h2 id="6-정리--언어와-행동-사이의-네-가지-어긋남">6. 정리 — 언어와 행동 사이의 네 가지 어긋남</h2> <table> <thead> <tr> <th>어긋남</th> <th>예</th> <th>근거</th> </tr> </thead> <tbody> <tr> <td>1. 지시문 단어 ↔ 실행 명령어</td> <td>태스크의 put, 게임의 move</td> <td>45% → 80% (지시문), 100% (번역)</td> </tr> <tr> <td>2. 같은 단어의 뜻 범위</td> <td>일상의 move(집어서 옮기기) vs 환경의 move(놓기만)</td> <td>집지 않고 move 57회</td> </tr> <tr> <td>3. 지시문의 물건 ↔ 실제 물건</td> <td>cloth를 찾으라는데 towel을 집음</td> <td>cloth 게임</td> </tr> <tr> <td>4. 실패 원인 ↔ 설명하는 언어</td> <td> <code class="language-plaintext highlighter-rouge">Nothing happens.</code> 한 문장 → 원인을 지어내고 반성문을 복사</td> <td>실험 1–8 반성문 전체</td> </tr> </tbody> </table> <p>같은 모델, 같은 게임에서 단어 하나만 바꿔도 성공률이 45%에서 100%까지 움직였습니다. 에이전트의 성능 숫자를 볼 때는 지시문과 명령어의 언어가 맞는지부터 확인해야 한다는 것이 이번 실험의 가장 큰 교훈입니다.</p> <h2 id="7-한계와-다음">7. 한계와 다음</h2> <ul> <li>게임 20개 · 모델 1개 · 실행 1번의 결과입니다. temperature 0이어도 게임 단위 결과가 조금씩 흔들렸습니다.</li> <li>코드 번역 100%는 논문 수치(ReAct PaLM-540B 71%, 134게임)보다 높습니다. 앞 20게임이 쉬웠을 수도 있고, ReAct/ALFWorld 기록이 Qwen의 학습 데이터에 들어갔을 수도(데이터 오염) 있습니다. 예시를 조금 바꾸면 성능이 떨어지는 것도 이 가설과 맞지만, 아직 확인하지는 못했습니다.</li> <li>실험 5는 태스크 지시문을 바꾼 분석용 실험이라 논문과 직접 비교할 수 없습니다.</li> </ul> <p>다음에 해 볼 것들입니다.</p> <ol> <li>코드 번역 실험을 134게임 전체로 돌려 논문과 같은 조건에서 비교하기</li> <li>다른 계열 모델(Llama, Gemma)과 더 큰 모델로 돌려 오염 효과와 크기 효과를 분리하기</li> <li>환경이 실패 이유를 말해 주면 반성문이 원인을 짚는지 확인하기</li> <li>마인크래프트 에이전트(STEVE-1, Voyager)에서도 같은 네 가지 틀로 관찰하기</li> </ol> </div> </article> <br> <hr> <br> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <ul class="list-disc pl-7 my-3 space-y-2 marker:text-[var(--global-theme-color)]"> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/reflexion-local-ollama/">Reflexion을 맥북 로컬 LLM으로 돌려 보기 — 15판 0승, 그런데 마지막 한 줄만 틀렸다</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/react-reflexion-papers/">ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/alfworld-first-play/">ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지</a> </li> </ul> </div> </div> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Jungmin Cha. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "about",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-publications",
+          title: "publications",
+          description: "publications by categories in reversed chronological order. generated by jekyll-scholar.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-projects",
+          title: "projects",
+          description: "A growing collection of your cool projects.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/projects/";
+          },
+        },{id: "nav-repositories",
+          title: "repositories",
+          description: "Edit the `_data/repositories.yml` and change the `github_users` and `github_repos` lists to include your own GitHub profile and repositories.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/repositories/";
+          },
+        },{id: "nav-cv",
+          title: "CV",
+          description: "This is a description of the page. You can modify it in '_pages/cv.md'. You can also change or remove the top pdf download button.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/cv/";
+          },
+        },{id: "nav-teaching",
+          title: "teaching",
+          description: "Course materials, schedules, and resources for classes taught.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/teaching/";
+          },
+        },{id: "nav-people",
+          title: "people",
+          description: "members of the lab or group",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/people/";
+          },
+        },{id: "dropdown-bookshelf",
+              title: "bookshelf",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/books/";
+              },
+            },{id: "dropdown-blog",
+              title: "blog",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/blog/";
+              },
+            },{id: "post-단어-하나가-바꾼-성공률-reflexion-통제-실험-5-8",
+        
+          title: "단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8",
+        
+        description: "같은 모델, 같은 20게임에서 태스크 지시문의 동사 하나를 바꾸자 성공률이 45%에서 80%로, 환경 쪽에서 문법을 번역하자 100%가 됐습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/one-word-success-rate/";
+          
+        },
+      },{id: "post-reflexion을-맥북-로컬-llm으로-돌려-보기-15판-0승-그런데-마지막-한-줄만-틀렸다",
+        
+          title: "Reflexion을 맥북 로컬 LLM으로 돌려 보기 — 15판 0승, 그런데 마지막 한 줄만...",
+        
+        description: "공식 Reflexion 코드의 LLM 호출부만 Ollama + Qwen2.5-7B로 바꿔 ALFWorld를 돌리고, 실패 원인을 통제 실험 네 개로 좁혔습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reflexion-local-ollama/";
+          
+        },
+      },{id: "post-react와-reflexion-논문-정리-생각을-쓰게-하고-실패를-글로-기억하게-하기",
+        
+          title: "ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기",
+        
+        description: "ALFWorld 위에서 LLM 에이전트를 만든 두 논문을 같은 틀(데이터, 입력과 출력, SKILL, 평가, 언어적 문제)로 정리했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/react-reflexion-papers/";
+          
+        },
+      },{id: "post-alfworld를-직접-플레이하며-찾은-실패-다섯-가지",
+        
+          title: "ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지",
+        
+        description: "LLM 에이전트를 돌리기 전에, 사람이 먼저 텍스트 게임을 풀어 보며 환경이 어디서 막히는지 기록했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/alfworld-first-play/";
+          
+        },
+      },{id: "books-the-godfather",
+          title: 'The Godfather',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/the_godfather/";
+            },},{id: "news-a-simple-inline-announcement",
+          title: 'A simple inline announcement.',
+          description: "",
+          section: "News",},{id: "news-a-long-announcement-with-details",
+          title: 'A long announcement with details',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/announcement_2/";
+            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
+          title: 'A simple inline announcement with Markdown emoji! <img class="emoji" title=":sparkles:" alt=":sparkles:" src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png" height="20" width="20"> <img class="emoji" title=":smile:" alt=":smile:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f604.png" height="20" width="20">',
+          description: "",
+          section: "News",},{id: "projects-project-1",
+          title: 'project 1',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/1_project/";
+            },},{id: "projects-project-2",
+          title: 'project 2',
+          description: "a project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/2_project/";
+            },},{id: "projects-project-3-with-very-long-name",
+          title: 'project 3 with very long name',
+          description: "a project that redirects to another website",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/3_project/";
+            },},{id: "projects-project-4",
+          title: 'project 4',
+          description: "another without an image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/4_project/";
+            },},{id: "projects-project-5",
+          title: 'project 5',
+          description: "a project with a background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/5_project/";
+            },},{id: "projects-project-6",
+          title: 'project 6',
+          description: "a project with no image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/6_project/";
+            },},{id: "projects-project-7",
+          title: 'project 7',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/7_project/";
+            },},{id: "projects-project-8",
+          title: 'project 8',
+          description: "an other project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/8_project/";
+            },},{id: "projects-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/9_project/";
+            },},{id: "teachings-data-science-fundamentals",
+          title: 'Data Science Fundamentals',
+          description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/data-science-fundamentals/";
+            },},{id: "teachings-introduction-to-machine-learning",
+          title: 'Introduction to Machine Learning',
+          description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-to-machine-learning/";
+            },},{
+        id: 'social-cv',
+        title: 'CV',
+        section: 'Socials',
+        handler: () => {
+          window.open("/assets/pdf/example_pdf.pdf", "_blank");
+        },
+      },{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-inspire',
+        title: 'Inspire HEP',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://inspirehep.net/authors/1010907", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-custom_social',
+        title: 'Custom_social',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.alberteinstein.com/", "_blank");
+        },
+      },{
+      id: 'light-theme',
+      title: 'Change theme to light',
+      description: 'Change the theme of the site to Light',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("light");
+      },
+    },
+    {
+      id: 'dark-theme',
+      title: 'Change theme to dark',
+      description: 'Change the theme of the site to Dark',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("dark");
+      },
+    },
+    {
+      id: 'system-theme',
+      title: 'Use system default theme',
+      description: 'Change the theme of the site to System Default',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("system");
+      },
+    },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>
