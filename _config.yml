@@ -2,11 +2,10 @@
 # Site settings
 # -----------------------------------------------------------------------------
 
-title: # 비워두면 "jungmin cha"가 제목으로 쓰임
+title: blank # "blank"로 두면 first_name + last_name 이 사이트 제목으로 쓰임
 first_name: Jungmin
 last_name: Cha
-contact_note: >
-  Email is the best way to reach me.
+contact_note:
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   ELION LAB, Konkuk University. Studying language agents and skill-based action in game and simulation environments (ALFWorld, Minecraft).
 footer_text: >
@@ -108,9 +107,9 @@ max_width: 930px
 # -----------------------------------------------------------------------------
 # Display links to the page with a preview object on social media.
 # see https://schema.org/docs/faq.html for more information
-serve_og_meta: false # Include Open Graph meta tags in the HTML head
+serve_og_meta: true # Include Open Graph meta tags in the HTML head
 serve_schema_org: false # Include Schema.org in the HTML head
-og_image: # The site-wide (default for all links) Open Graph preview image
+og_image: /assets/img/og_default.png # The site-wide (default for all links) Open Graph preview image
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
@@ -233,9 +232,38 @@ exclude:
   - package.json
   - package-lock.json
   - _pages/about_einstein.md
+  # --- al-folio 템플릿 데모 콘텐츠: 빌드에서 제외 (파일은 남겨 두어 필요할 때 이 줄만 지우면 다시 켜짐) ---
+  - _pages/books.md
+  - _pages/cv.md
+  - _pages/dropdown.md
+  - _pages/news.md
+  - _pages/plugins.md
+  - _pages/profiles.md
+  - _pages/projects.md
+  - _pages/publications.md
+  - _pages/repositories.md
+  - _pages/teaching.md
+  - _books/
+  - _news/announcement_*.md
+  - _projects/?_project.md
+  - _teachings/
+  - assets/json/
+  - assets/rendercv/
+  - assets/jupyter/
+  - assets/pdf/example_pdf.pdf
+  - assets/audio/
+  - assets/video/
+  - assets/html/
+  - assets/plotly/
+  # --- 저장소 루트에 남은 초안 사본 (실제 글은 _posts/, 이미지는 assets/img/ 에 있음) ---
+  - 2026-11-05-alfworld-first-play.md
+  - alfworld_first_win.png
+  - "Claude outputs/"
+  - test/
   - purgecss.config.js
   - README.md
   - readme_preview/
+  - requirements.txt
   - gems/
   - migrations/
   - vendor
@@ -336,8 +364,8 @@ jekyll-archives:
   books:
     enabled: [year, tags, categories] # enables year, tag and category archives (remove if you need to disable one of them).
 
-display_tags: ["formatting", "images", "links", "math", "code", "blockquotes"] # these tags will be displayed on the front page of your blog
-display_categories: ["external-services"] # these categories will be displayed on the front page of your blog
+display_tags: ["alfworld", "minecraft", "reflexion", "paper"] # these tags will be displayed on the front page of your blog
+display_categories: [] # these categories will be displayed on the front page of your blog
 
 # -----------------------------------------------------------------------------
 # Jekyll Scholar

@@ -1,0 +1,37 @@
+{% comment %}
+  시리즈 목차 상자. 글 본문 맨 위에 `{% include series.liquid %}` 로 넣는다.
+  필요한 front matter: series (키, _data/series.yml 에 정의), series_order (정수), series_title (선택, 짧은 제목)
+{% endcomment %}
+{% if page.series %}
+  {% assign series_info = site.data.series[page.series] %}
+  {% assign series_posts = site.posts | where: 'series', page.series | sort: 'series_order' %}
+  <nav class="series-box" aria-label="시리즈 목차">
+    <p class="series-box-head">
+      <span class="series-box-label">{{ series_info.label | default: 'Series' }}</span>
+      <span class="series-box-title">{{ series_info.title }}</span>
+      <span class="series-box-count">{{ page.series_order }} / {{ series_posts | size }}</span>
+    </p>
+    <ol class="series-box-list">
+      {% for p in series_posts %}
+        {% if p.url == page.url %}
+          <li class="is-current" aria-current="page">{{ p.series_title | default: p.title }}</li>
+        {% else %}
+          <li>
+            <a href="{{ p.url | relative_url }}">{{ p.series_title | default: p.title }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+    {% assign other_key = series_info.next | default: series_info.prev %}
+    {% if other_key %}
+      {% assign other_info = site.data.series[other_key] %}
+      {% assign other_first = site.posts | where: 'series', other_key | sort: 'series_order' | first %}
+      {% if other_first %}
+        <p class="series-box-other">
+          {% if series_info.next %}다음 시리즈{% else %}이전 시리즈{% endif %}:
+          <a href="{{ other_first.url | relative_url }}">{{ other_info.title }}</a>
+        </p>
+      {% endif %}
+    {% endif %}
+  </nav>
+{% endif %}

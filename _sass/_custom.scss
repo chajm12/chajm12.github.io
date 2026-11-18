@@ -1,0 +1,450 @@
+/*******************************************************************************
+ * Site-local styles for chajm12.github.io
+ *
+ * 이 파일만 고치면 색 · 글꼴 · 시리즈 상자를 바꿀 수 있다.
+ * 색은 발표 자료(ELION Midnight)와 같은 팔레트를 쓴다.
+ *   navy  #1E2761  제목
+ *   ink   #21295C  본문
+ *   teal  #0B5D83  링크 · 강조 (표 머리글, 칩)
+ *   teal2 #1C7293  hover
+ *   ice   #CADCFC  옅은 강조
+ *   slate #5B6472  보조 글자
+ *   line  #E2E4EA  선
+ *   mist  #F5F7FA  상자 배경
+ ******************************************************************************/
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+$navy: #1e2761;
+$ink: #21295c;
+$teal: #0b5d83;
+$teal-2: #1c7293;
+$ice: #cadcfc;
+$slate: #5b6472;
+$line: #e2e4ea;
+$mist: #f5f7fa;
+
+/* ---------- Color tokens ---------- */
+:root {
+  --global-text-color: #{$ink};
+  --global-text-color-light: #{$slate};
+  --global-theme-color: #{$teal};
+  --global-hover-color: #{$teal-2};
+  --global-hover-text-color: #ffffff;
+  --global-divider-color: #{$line};
+  --global-code-bg-color: #{$mist};
+  --global-card-bg-color: #ffffff;
+  --global-footer-bg-color: #{$navy};
+  --global-footer-text-color: #{$ice};
+  --global-footer-link-color: #ffffff;
+  --global-highlight-color: #{$teal};
+
+  --site-heading-color: #{$navy};
+  --site-panel-bg: #{$mist};
+  --site-panel-border: #{$line};
+  --site-accent-soft: #{$ice};
+  --site-table-head-bg: #{$teal};
+  --site-table-head-text: #ffffff;
+  --site-table-stripe: #fafbfd;
+}
+
+html[data-theme="dark"] {
+  --global-bg-color: #12172f;
+  --global-text-color: #e2e4ea;
+  --global-text-color-light: #9aa3b8;
+  --global-theme-color: #8fc1e3;
+  --global-hover-color: #{$ice};
+  --global-hover-text-color: #12172f;
+  --global-divider-color: #2b3360;
+  --global-code-bg-color: #1a2145;
+  --global-card-bg-color: #1a2145;
+  --global-footer-bg-color: #0c1022;
+  --global-footer-text-color: #9aa3b8;
+  --global-footer-link-color: #e2e4ea;
+  --global-highlight-color: #8fc1e3;
+
+  --site-heading-color: #f1f4fb;
+  --site-panel-bg: #1a2145;
+  --site-panel-border: #2b3360;
+  --site-accent-soft: #2b3a78;
+  --site-table-head-bg: #1c4f73;
+  --site-table-head-text: #f1f4fb;
+  --site-table-stripe: #161c3b;
+}
+
+/* ---------- Typography ---------- */
+body {
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    Roboto,
+    sans-serif;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.post-title,
+.navbar-brand {
+  color: var(--site-heading-color);
+  letter-spacing: -0.01em;
+}
+
+.post .post-header .post-title {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.post-content,
+.post article {
+  line-height: 1.75;
+}
+
+.post article h2 {
+  font-weight: 700;
+  margin-top: 2.2rem;
+}
+
+.post-content {
+  h2 {
+    margin-top: 2.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--site-accent-soft);
+    font-weight: 700;
+  }
+
+  h3 {
+    margin-top: 1.8rem;
+    font-weight: 600;
+  }
+
+  strong {
+    color: inherit;
+  }
+}
+
+/* 상단 메뉴: 테마 기본값은 약간 투명해서 어두운 코드 상자가 비쳐 보인다 */
+.navbar {
+  opacity: 1;
+}
+
+/* ---------- Blockquote = 발표 자료의 옅은 패널 ---------- */
+blockquote {
+  background: var(--site-panel-bg);
+  border-left: 4px solid var(--global-theme-color);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+}
+
+/* ---------- Tables = 발표 자료의 표 (teal 머리글, 옅은 선) ---------- */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0 1.75rem;
+
+  th,
+  td {
+    font-size: 0.95rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--site-panel-border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+
+  thead th {
+    background: var(--site-table-head-bg);
+    color: var(--site-table-head-text);
+    font-weight: 600;
+    border-color: var(--site-table-head-bg);
+  }
+
+  tbody tr:nth-child(even) td {
+    background: var(--site-table-stripe);
+  }
+
+  tbody td:first-child {
+    font-weight: 600;
+  }
+}
+
+/* 좁은 화면: 표가 글자 단위로 쪼개지지 않도록 표 안에서 가로로 스크롤 */
+@media (max-width: 640px) {
+  .post-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    th,
+    td {
+      min-width: 7.5rem;
+    }
+  }
+}
+
+/* ---------- Code = 발표 자료의 검정 코드 상자 ---------- */
+.post-content {
+  /* 본문 속 짧은 코드 */
+  :not(pre) > code {
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+
+  /* 코드 블록: 라이트 · 다크 모두 같은 어두운 상자 */
+  pre.highlight,
+  figure.highlight pre {
+    background: #1a1a1a;
+    color: #e8eaf0;
+    border: 0;
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    line-height: 1.6;
+    font-size: 0.86rem;
+    overflow-x: auto;
+
+    code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    /* 테마의 밝은 배경용 색을 모두 지우고, 아래에서 필요한 것만 다시 칠한다 */
+    span {
+      color: inherit;
+      background: transparent;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    /* 문법 강조 색 (어두운 배경용) */
+    .c,
+    .c1,
+    .cm,
+    .cp,
+    .cs,
+    .ch,
+    .cd {
+      color: #8b93a7;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .k,
+    .kd,
+    .kn,
+    .kp,
+    .kr,
+    .kt,
+    .kc,
+    .ow {
+      color: #8fc1e3;
+      font-weight: 600;
+    }
+
+    .s,
+    .s1,
+    .s2,
+    .sb,
+    .sc,
+    .sd,
+    .se,
+    .sh,
+    .si,
+    .sx,
+    .sr,
+    .ss,
+    .dl {
+      color: #b9e3c6;
+    }
+
+    .m,
+    .mi,
+    .mf,
+    .mh,
+    .mo,
+    .il {
+      color: #f0c987;
+    }
+
+    .nf,
+    .nc {
+      color: #{$ice};
+    }
+  }
+}
+
+/* ---------- Blog index ---------- */
+.header-bar {
+  text-align: left;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+
+  h1 {
+    color: var(--site-heading-color);
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    color: var(--global-text-color-light);
+    font-size: 1.05rem;
+    font-weight: 400;
+    margin: 0;
+  }
+}
+
+.tag-category-list {
+  text-align: left;
+  padding-top: 0.5rem;
+
+  ul {
+    justify-content: flex-start;
+    padding-left: 0;
+
+    p,
+    li {
+      padding: 0.6rem 0.4rem 0.6rem 0;
+    }
+  }
+}
+
+/* ---------- Series box (글 맨 위 시리즈 목차) ---------- */
+.series-box {
+  background: var(--site-panel-bg);
+  border: 1px solid var(--site-panel-border);
+  border-left: 4px solid var(--global-theme-color);
+  border-radius: 0 10px 10px 0;
+  padding: 1rem 1.25rem 0.9rem;
+  margin: 0 0 1.75rem;
+  font-size: 0.95rem;
+
+  .series-box-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.6rem;
+    margin: 0 0 0.6rem;
+  }
+
+  .series-box-label {
+    background: var(--global-theme-color);
+    color: var(--global-bg-color);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+  }
+
+  .series-box-title {
+    color: var(--site-heading-color);
+    font-weight: 700;
+  }
+
+  .series-box-count {
+    color: var(--global-text-color-light);
+    font-size: 0.85rem;
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .series-box-list {
+    margin: 0;
+    padding-left: 1.4rem;
+
+    li {
+      margin: 0.15rem 0;
+      color: var(--global-text-color-light);
+    }
+
+    li.is-current {
+      color: var(--site-heading-color);
+      font-weight: 700;
+    }
+
+    li.is-current::marker {
+      color: var(--global-theme-color);
+    }
+  }
+
+  .series-box-other {
+    margin: 0.7rem 0 0;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--site-panel-border);
+    font-size: 0.88rem;
+    color: var(--global-text-color-light);
+  }
+}
+
+/* ---------- Series cards (첫 화면) ---------- */
+.series-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 2rem;
+}
+
+a.series-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--site-panel-bg);
+  border: 1px solid var(--site-panel-border);
+  border-top: 4px solid var(--global-theme-color);
+  border-radius: 10px;
+  padding: 1.1rem 1.2rem 1.2rem;
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: var(--global-theme-color);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .series-card-label {
+    color: var(--global-theme-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .series-card-title {
+    color: var(--site-heading-color);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .series-card-desc {
+    color: var(--global-text-color-light);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.series-card {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

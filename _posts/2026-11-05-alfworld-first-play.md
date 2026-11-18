@@ -5,9 +5,14 @@ date: 2026-11-05 18:00:00 +0900
 description: LLM 에이전트를 돌리기 전에, 사람이 먼저 텍스트 게임을 풀어 보며 환경이 어디서 막히는지 기록했습니다.
 tags: alfworld agent react reflexion
 categories: notes
+series: alfworld
+series_order: 1
+series_title: "직접 플레이하며 찾은 실패 다섯 가지"
 toc:
   sidebar: left
 ---
+
+{% include series.liquid %}
 
 > **이 글에 대해**
 > 교수님 과제로 Agentic AI의 SKILL Action 연구를 시작하면서, 첫 번째 환경인 ALFWorld를 맥북에 설치하고 게임 한 판을 직접 플레이했습니다.
@@ -31,11 +36,11 @@ ReAct와 Reflexion이 이 134개 게임으로 성공률을 보고하기 때문�
 
 맥북(Apple Silicon)에서 GPU 없이 설치했습니다. 세 번 막혔습니다.
 
-| # | 증상 | 원인 | 해결 |
-| --- | --- | --- | --- |
-| 1 | `bad CPU type in executable: pip` | 문서 권장대로 `CONDA_SUBDIR=osx-64`(인텔용) 환경을 만들었는데 Rosetta 2가 없었음 | `softwareupdate --install-rosetta` |
-| 2 | `alfworld[full]` 설치 중 visdom 빌드 실패 (`No module named 'pkg_resources'`) | setuptools 80부터 `pkg_resources`가 빠졌는데 visdom이 아직 씀. `[full]`은 3D 시각 환경과 학습용 패키지 묶음이라 텍스트 실험에는 불필요 | `pip install alfworld` (텍스트 전용) |
-| 3 | spacy 설치 실패 (`No matching distribution found for thinc`) | 최신 spacy가 요구하는 thinc가 Python 3.10 이상 전용. 문서 예시는 3.9 | Python 3.10으로 환경 재생성 |
+| #   | 증상                                                                          | 원인                                                                                                                                   | 해결                                 |
+| --- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| 1   | `bad CPU type in executable: pip`                                             | 문서 권장대로 `CONDA_SUBDIR=osx-64`(인텔용) 환경을 만들었는데 Rosetta 2가 없었음                                                       | `softwareupdate --install-rosetta`   |
+| 2   | `alfworld[full]` 설치 중 visdom 빌드 실패 (`No module named 'pkg_resources'`) | setuptools 80부터 `pkg_resources`가 빠졌는데 visdom이 아직 씀. `[full]`은 3D 시각 환경과 학습용 패키지 묶음이라 텍스트 실험에는 불필요 | `pip install alfworld` (텍스트 전용) |
+| 3   | spacy 설치 실패 (`No matching distribution found for thinc`)                  | 최신 spacy가 요구하는 thinc가 Python 3.10 이상 전용. 문서 예시는 3.9                                                                   | Python 3.10으로 환경 재생성          |
 
 최종 명령은 다음과 같습니다.
 
@@ -101,12 +106,12 @@ ALFWorld 논문의 행동 목록과 ReAct 프롬프트 예시는 `put ... in/on`
 
 ## 5. 정리
 
-| # | 관찰 | 유형 | 관련 방법 |
-| --- | --- | --- | --- |
-| 1 | 모든 실패가 `Nothing happens.` | 피드백 부재 | 실패 원인을 언어로 추론해야 함 |
-| 2 | 같은 이름, 다른 조작 | affordance 불투명 | 과도한 일반화 위험 |
-| 3 | 알려주지 않는 전제조건 | 숨은 규칙 | ReAct few-shot 예시 |
-| 4 | 탐색에 25스텝 | 탐색 비효율 | ReAct의 상식 추론, Reflexion의 기억 |
-| 5 | `put` → `move` | 버전 불일치 | 재현 전 확인 필요 |
+| #   | 관찰                           | 유형              | 관련 방법                           |
+| --- | ------------------------------ | ----------------- | ----------------------------------- |
+| 1   | 모든 실패가 `Nothing happens.` | 피드백 부재       | 실패 원인을 언어로 추론해야 함      |
+| 2   | 같은 이름, 다른 조작           | affordance 불투명 | 과도한 일반화 위험                  |
+| 3   | 알려주지 않는 전제조건         | 숨은 규칙         | ReAct few-shot 예시                 |
+| 4   | 탐색에 25스텝                  | 탐색 비효율       | ReAct의 상식 추론, Reflexion의 기억 |
+| 5   | `put` → `move`                 | 버전 불일치       | 재현 전 확인 필요                   |
 
 다음에는 ReAct를 같은 환경에서 돌려 보고, 위 다섯 가지 중 무엇을 LLM이 실제로 겪는지 확인할 계획입니다.

@@ -1,0 +1,10 @@
+# 글 시리즈 정의. 글의 front matter에 `series: <키>` 와 `series_order: <순서>` 를 넣으면
+# `{% include series.liquid %}` 가 이 정보를 읽어 시리즈 목차 상자를 그린다.
+alfworld:
+  label: Series 1
+  title: ALFWorld에서 본 언어와 행동
+  next: minecraft
+minecraft:
+  label: Series 2
+  title: 마인크래프트 에이전트 논문 읽기
+  prev: alfworld

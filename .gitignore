@@ -19,3 +19,6 @@ vendor
 # Python bytecode from bin/ helper scripts
 __pycache__/
 *.pyc
+
+# Claude 작업 중 생긴 임시 폴더 (블로그에 올리지 않음)
+Claude outputs/

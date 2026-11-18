@@ -2,33 +2,42 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
+subtitle: ELION LAB · Konkuk University
 
-profile:
-  align: right
-  image: prof_pic.jpg
-  image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
-
-selected_papers: true # includes a list of papers marked as "selected={true}"
+selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 
 announcements:
-  enabled: true # includes a list of news items
-  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: 5 # leave blank to include all the news in the `_news` folder
+  enabled: false # includes a list of news items
 
 latest_posts:
   enabled: true
-  scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
-  limit: 3 # leave blank to include all the blog posts
+  scrollable: false # adds a vertical scroll bar if there are more than 3 new posts items
+  limit: 5 # leave blank to include all the blog posts
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](https://www.reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+건국대학교 ELION LAB에서 **언어 에이전트**를 공부하고 있습니다.
+에이전트가 가진 기술(Skill)이 어떤 형태로 표현되는지, 그리고 그 기술을 고르는 언어가 실제 행동과 어디서 어긋나는지에 관심이 있습니다.
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+이 블로그는 논문을 읽고, 코드를 직접 돌리고, 실패한 지점을 기록하는 공부 노트입니다.
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+## 공부 기록
+
+<div class="series-cards">
+  <a class="series-card" href="{% post_url 2026-11-05-alfworld-first-play %}">
+    <span class="series-card-label">Series 1 · 4편</span>
+    <span class="series-card-title">ALFWorld에서 본 언어와 행동</span>
+    <span class="series-card-desc">텍스트 게임을 직접 플레이하고, ReAct · Reflexion을 로컬 LLM으로 돌려 실패 원인을 통제 실험으로 좁힌 기록</span>
+  </a>
+  <a class="series-card" href="{% post_url 2026-11-14-voyager-code-as-skill %}">
+    <span class="series-card-label">Series 2 · 4편</span>
+    <span class="series-card-title">마인크래프트 에이전트 논문 읽기</span>
+    <span class="series-card-desc">Voyager · VPT · STEVE-1을 같은 항목으로 정리하고, Skill이 자연어 · 코드 · 신경망 가중치일 때를 비교한 기록</span>
+  </a>
+</div>
+
+## 지금 보고 있는 것
+
+- **Skill의 표현 방식** — 자연어 메모(Reflexion), 실행 코드(Voyager), 신경망 가중치(VPT · STEVE-1)
+- **언어–행동 불일치** — 지시문의 단어 하나가 성공률을 바꾸는 현상과 그 원인
+- **다음 실험** — STEVE-1에서 같은 일을 다른 문장으로 시켰을 때 행동이 얼마나 달라지는지
