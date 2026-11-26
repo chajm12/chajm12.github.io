@@ -28,6 +28,16 @@ Skill이 자연어가 아니라 실행 코드나 신경망 가중치로 표현�
 | 3   | [STEVE-1 논문 정리](https://chajm12.github.io/blog/2026/steve1-text-to-behavior/)                      | VPT에 지시문을 받는 입력을 붙인 모델, 지시문 표현에 대한 민감도 |
 | 4   | [Skill이 글 · 코드 · 가중치일 때](https://chajm12.github.io/blog/2026/skill-representations-compared/) | 여섯 편 비교와 STEVE-1 지시문 실험 설계                         |
 
+### Series 3 · STEVE-1 직접 돌려 보기
+
+공개된 STEVE-1 가중치를 실행해 논문 숫자를 재현하고, 지시문 표현을 바꿔 가며 행동이 어떻게 달라지는지 확인한 기록입니다.
+
+| #   | 글                                                                                                          | 내용                                                           |
+| --- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 1   | [STEVE-1을 직접 돌려 논문 숫자 재현하기](https://chajm12.github.io/blog/2026/steve1-baseline-reproduction/) | 논문 부록의 평가 설정으로 20판, 흙은 재현되고 나무는 낮게 나옴 |
+| 2   | [STEVE-1 이후 논문 세 편](https://chajm12.github.io/blog/2026/after-steve1-three-papers/)                   | GROOT-2 · ROCKET-1 · CrafText가 본 언어 지시의 한계            |
+| 3   | [같은 뜻, 다른 문장](https://chajm12.github.io/blog/2026/steve1-instruction-pilot/)                         | 지시문 8개 × 5판. 같은 뜻인데 6.0개 vs 0.4개, 부정문은 무시됨  |
+
 ## 저장소 구조
 
 글과 디자인을 고칠 때 손대는 파일은 아래가 전부입니다.

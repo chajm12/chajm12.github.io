@@ -7,4 +7,8 @@ alfworld:
 minecraft:
   label: Series 2
   title: 마인크래프트 에이전트 논문 읽기
-  prev: alfworld
+  next: steve1
+steve1:
+  label: Series 3
+  title: STEVE-1 직접 돌려 보기
+  prev: minecraft
