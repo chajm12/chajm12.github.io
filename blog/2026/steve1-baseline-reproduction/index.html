@@ -1,0 +1,207 @@
+<!DOCTYPE html> <html lang="ko"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> STEVE-1을 직접 돌려 논문 숫자 재현하기 | Jungmin Cha </title> <meta name="author" content="Jungmin Cha"> <meta name="description" content="공개된 STEVE-1 가중치를 클라우드 GPU에서 실행하고, 논문 부록의 평가 설정을 그대로 따라 나무와 흙 수집량을 다시 측정했습니다. 흙은 재현됐고 나무는 논문보다 낮게 나왔습니다."> <meta name="keywords" content="language agents, skill, ALFWorld, Minecraft, VLA, embodied AI"> <meta property="og:site_name" content="Jungmin Cha"> <meta property="og:type" content="article"> <meta property="og:title" content="Jungmin Cha | STEVE-1을 직접 돌려 논문 숫자 재현하기"> <meta property="og:url" content="https://chajm12.github.io/blog/2026/steve1-baseline-reproduction/"> <meta property="og:description" content="공개된 STEVE-1 가중치를 클라우드 GPU에서 실행하고, 논문 부록의 평가 설정을 그대로 따라 나무와 흙 수집량을 다시 측정했습니다. 흙은 재현됐고 나무는 논문보다 낮게 나왔습니다."> <meta property="og:image" content="https://chajm12.github.io/assets/img/og_default.png"> <meta property="og:locale" content="ko"> <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="STEVE-1을 직접 돌려 논문 숫자 재현하기"> <meta name="twitter:description" content="공개된 STEVE-1 가중치를 클라우드 GPU에서 실행하고, 논문 부록의 평가 설정을 그대로 따라 나무와 흙 수집량을 다시 측정했습니다. 흙은 재현됐고 나무는 논문보다 낮게 나왔습니다."> <meta name="twitter:image" content="https://chajm12.github.io/assets/img/og_default.png"> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%A7%AD&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=3116ba77db9ee1581d05bb3e86fbf7f1"> <link rel="canonical" href="https://chajm12.github.io/blog/2026/steve1-baseline-reproduction/"> <script src="/assets/js/theme.js?v=5286c3e4c334d0ecb8fc0c40ff4fa7ec"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?v=5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> <span class="font-weight-bold">Jungmin</span> Cha </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" type="button" title="Change theme" aria-label="Change color theme"> <i class="fa-half-sun-moon" id="light-toggle-system"></i> <i class="fa-solid fa-moon" id="light-toggle-dark"></i> <i class="fa-solid fa-sun" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">STEVE-1을 직접 돌려 논문 숫자 재현하기</h1> <p class="post-meta"> Created on November 22, 2026 </p> <p class="post-tags"> <a href="/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/blog/tag/minecraft"> <i class="fa-solid fa-hashtag fa-sm"></i> minecraft</a>   <a href="/blog/tag/agent"> <i class="fa-solid fa-hashtag fa-sm"></i> agent</a>   <a href="/blog/tag/steve-1"> <i class="fa-solid fa-hashtag fa-sm"></i> steve-1</a>   <a href="/blog/tag/minestudio"> <i class="fa-solid fa-hashtag fa-sm"></i> minestudio</a>   <a href="/blog/tag/reproduction"> <i class="fa-solid fa-hashtag fa-sm"></i> reproduction</a>   ·   <a href="/blog/category/notes"> <i class="fa-solid fa-tag fa-sm"></i> notes</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <nav class="series-box" aria-label="시리즈 목차"> <p class="series-box-head"> <span class="series-box-label">Series 3</span> <span class="series-box-title">STEVE-1 직접 돌려 보기</span> <span class="series-box-count">1 / 3</span> </p> <ol class="series-box-list"> <li class="is-current" aria-current="page">논문 숫자 재현하기</li> <li> <a href="/blog/2026/after-steve1-three-papers/">STEVE-1 이후 논문 세 편</a> </li> <li> <a href="/blog/2026/steve1-instruction-pilot/">지시문 바꿔 보기</a> </li> </ol> <p class="series-box-other"> 이전 시리즈: <a href="/blog/2026/voyager-code-as-skill/">마인크래프트 에이전트 논문 읽기</a> </p> </nav> <blockquote> <p><strong>이 글에 대해</strong> <a href="/blog/2026/steve1-text-to-behavior/">STEVE-1 논문 정리</a>에서 읽기만 했던 모델을 직접 실행한 기록입니다. 지시문을 바꿔 보는 실험을 하기 전에, 먼저 논문과 같은 조건에서 같은 숫자가 나오는지 확인했습니다. 기준점이 맞아야 그 뒤의 비교를 믿을 수 있기 때문입니다.</p> </blockquote> <h2 id="1-한눈에">1. 한눈에</h2> <table> <thead> <tr> <th>항목</th> <th>내용</th> </tr> </thead> <tbody> <tr> <td>모델</td> <td>STEVE-1 공개 가중치 (<code class="language-plaintext highlighter-rouge">CraftJarvis/MineStudio_STEVE-1.official</code>)</td> </tr> <tr> <td>실행 도구</td> <td> <a href="https://github.com/CraftJarvis/MineStudio" rel="external nofollow noopener" target="_blank">MineStudio</a> 1.1.6</td> </tr> <tr> <td>장비</td> <td>클라우드 GPU (H100 1장)</td> </tr> <tr> <td>평가 방식</td> <td>논문 Appendix F.2 · Table 3</td> </tr> <tr> <td>규모</td> <td>지시문 2개 × 10판 = 20판, 약 38분</td> </tr> <tr> <td>결과</td> <td>흙 10.7개 (논문 9.2), 나무 5.2개 (논문 약 8.5)</td> </tr> </tbody> </table> <p>학습은 하지 않았습니다. 공개된 가중치를 그대로 불러와 게임을 시키고 결과만 셌습니다.</p> <h2 id="2-실행-환경">2. 실행 환경</h2> <p>STEVE-1 원본 저장소 대신 MineStudio를 썼습니다. 시뮬레이터, 모델, 가중치 내려받기를 한 패키지로 묶어 둔 도구라 설치가 간단합니다.</p> <table> <thead> <tr> <th>구성</th> <th>설정</th> </tr> </thead> <tbody> <tr> <td>Python</td> <td>3.10 (conda)</td> </tr> <tr> <td>Java</td> <td>8 (OpenJDK). 마인크래프트 실행에 필요</td> </tr> <tr> <td>화면</td> <td> <code class="language-plaintext highlighter-rouge">xvfb-run</code>으로 가상 디스플레이 사용</td> </tr> <tr> <td>관측 크기</td> <td>128 × 128</td> </tr> <tr> <td>실행</td> <td> <code class="language-plaintext highlighter-rouge">nohup</code>으로 백그라운드 실행, 로그는 파일</td> </tr> </tbody> </table> <p>모니터가 없는 서버라 게임 화면을 그릴 곳이 없습니다. <code class="language-plaintext highlighter-rouge">xvfb-run</code>은 가짜 모니터를 만들어 주는 명령입니다.</p> <p>한 판을 돌리는 코드의 뼈대는 아래와 같습니다.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">policy</span> <span class="o">=</span> <span class="n">SteveOnePolicy</span><span class="p">.</span><span class="nf">from_pretrained</span><span class="p">(</span><span class="sh">"</span><span class="s">CraftJarvis/MineStudio_STEVE-1.official</span><span class="sh">"</span><span class="p">).</span><span class="nf">to</span><span class="p">(</span><span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span><span class="p">).</span><span class="nf">eval</span><span class="p">()</span>
+<span class="n">env</span> <span class="o">=</span> <span class="nc">MinecraftSim</span><span class="p">(</span><span class="n">obs_size</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">preferred_spawn_biome</span><span class="o">=</span><span class="sh">"</span><span class="s">forest</span><span class="sh">"</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[])</span>
+
+<span class="n">env</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="nf">reset</span><span class="p">()</span>
+<span class="n">cond</span> <span class="o">=</span> <span class="n">policy</span><span class="p">.</span><span class="nf">prepare_condition</span><span class="p">({</span><span class="sh">"</span><span class="s">cond_scale</span><span class="sh">"</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">chop a tree</span><span class="sh">"</span><span class="p">})</span>  <span class="c1"># 판마다 한 번
+</span><span class="n">memory</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3000</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">{</span><span class="sh">"</span><span class="s">image</span><span class="sh">"</span><span class="p">:</span> <span class="n">torch</span><span class="p">.</span><span class="nf">from_numpy</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="sh">"</span><span class="s">image</span><span class="sh">"</span><span class="p">])[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">].</span><span class="nf">to</span><span class="p">(</span><span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span><span class="p">),</span> <span class="sh">"</span><span class="s">condition</span><span class="sh">"</span><span class="p">:</span> <span class="n">cond</span><span class="p">}</span>
+    <span class="n">action</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">policy</span><span class="p">.</span><span class="nf">get_action</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memory</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="sh">"</span><span class="s">BT*</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">action</span><span class="p">.</span><span class="nf">items</span><span class="p">()}</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+</code></pre></div></div> <h2 id="3-막혔던-곳-세-가지">3. 막혔던 곳 세 가지</h2> <table> <thead> <tr> <th>증상</th> <th>원인</th> <th>대응</th> </tr> </thead> <tbody> <tr> <td>백그라운드 실행이 시작하자마자 종료</td> <td>게임 엔진이 임시 저장소에 있어 서버를 멈추면 사라짐. 다시 받을지 묻는 <code class="language-plaintext highlighter-rouge">Y/N</code> 입력에서 멈춤</td> <td> <code class="language-plaintext highlighter-rouge">MINESTUDIO_DIR</code>을 지워지지 않는 저장소로 지정하고 엔진을 미리 내려받음</td> </tr> <tr> <td>13번째 판에서 <code class="language-plaintext highlighter-rouge">TimeoutError</code> </td> <td>새 월드를 만드는 <code class="language-plaintext highlighter-rouge">env.reset()</code>에서 게임이 응답하지 않음</td> <td>오류가 나면 게임을 닫고 다시 만들어 그 판만 재시도 (최대 3회)</td> </tr> <tr> <td>중간에 끊기면 결과가 사라질 위험</td> <td>결과를 마지막에 한 번에 저장</td> <td>한 판이 끝날 때마다 CSV에 한 줄 기록, 다시 실행하면 끝난 판은 건너뜀</td> </tr> </tbody> </table> <p>두 번째와 세 번째는 같이 고쳐야 했습니다. 재시도만 넣으면 그 전까지의 결과가 메모리에만 있어서, 재시도까지 실패했을 때 전부 잃게 됩니다.</p> <h2 id="4-코드를-읽다가-알게-된-것--목표-벡터를-얼마나-자주-뽑는가">4. 코드를 읽다가 알게 된 것 — 목표 벡터를 얼마나 자주 뽑는가</h2> <p>STEVE-1은 지시문을 그대로 쓰지 않고, <strong>목표 벡터</strong>로 바꿔서 정책에 넘깁니다. 이 변환을 하는 prior에는 무작위성이 있어서 같은 문장을 넣어도 뽑을 때마다 조금씩 다른 벡터가 나옵니다.</p> <p>MineStudio 예제 코드는 정책에 글만 넘깁니다. 이 경우 <code class="language-plaintext highlighter-rouge">forward()</code> 안에서 <strong>매 스텝마다</strong> 목표 벡터를 새로 뽑습니다. 한 판 3000스텝이면 3000번입니다.</p> <table> <thead> <tr> <th>방식</th> <th>한 판 동안 일어나는 일</th> </tr> </thead> <tbody> <tr> <td>예제 코드</td> <td>매 스텝(초당 20번) 목표 벡터를 새로 뽑음</td> </tr> <tr> <td>이 글의 실험</td> <td>판을 시작할 때 한 번 뽑아 끝까지 같은 벡터 사용</td> </tr> </tbody> </table> <p>논문은 “prior로 목표를 뽑는다”고만 쓰고 빈도는 밝히지 않았습니다. 저는 한 판에 한 번 뽑는 쪽이 논문의 서술에 더 가깝다고 보고 그렇게 고정했습니다. 두 방식의 숫자 차이는 아직 비교하지 않았습니다.</p> <p>같은 지시문이라도 이 설정에 따라 결과가 달라질 수 있으니, 재현하거나 비교할 때 적어 둬야 하는 변수입니다.</p> <h2 id="5-평가-설정">5. 평가 설정</h2> <p>논문 부록의 설정과 제가 쓴 설정을 나란히 적었습니다.</p> <table> <thead> <tr> <th>항목</th> <th>논문 (Appendix F.2)</th> <th>이 글</th> </tr> </thead> <tbody> <tr> <td>한 판 길이</td> <td>3000 timesteps (2.5분)</td> <td>같음</td> </tr> <tr> <td>판 수</td> <td>조건마다 10판, 조건 간 같은 seed</td> <td>seed 0–9</td> </tr> <tr> <td>Guidance scale</td> <td>글 지시문은 λ = 6.0</td> <td>같음</td> </tr> <tr> <td>지표</td> <td>한 판 동안 인벤토리에 보인 아이템의 최대 개수</td> <td>같음</td> </tr> <tr> <td>지시문</td> <td>“chop a tree”, “get dirt”</td> <td>같음</td> </tr> <tr> <td>시작 지형</td> <td>명시 없음</td> <td>forest로 고정</td> </tr> <tr> <td>목표 벡터</td> <td>빈도 명시 없음</td> <td>판마다 한 번</td> </tr> <tr> <td>가중치</td> <td>원본 저장소</td> <td>MineStudio가 옮겨 놓은 가중치</td> </tr> </tbody> </table> <p>seed는 월드를 만드는 번호입니다. 같은 seed면 같은 지형에서 시작하므로, 조건마다 같은 seed를 쓰면 “지형이 달라서 생긴 차이”를 빼고 비교할 수 있습니다.</p> <p>시작 지형을 forest로 고정한 것은 바다나 사막 한가운데서 시작해 나무를 볼 기회조차 없는 판을 줄이기 위해서입니다. 논문에 없는 설정이라 결과를 읽을 때 감안해야 합니다.</p> <h2 id="6-결과">6. 결과</h2> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/steve1_baseline_chart-480.webp 480w,/assets/img/steve1_baseline_chart-800.webp 800w,/assets/img/steve1_baseline_chart-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/steve1_baseline_chart.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 10판 평균과 95% 신뢰구간. 논문 값은 Figure 16에서 읽었습니다. </div> <table> <thead> <tr> <th>지시문</th> <th>지표</th> <th>이 글 (10판 평균 ± 95% CI)</th> <th>논문</th> </tr> </thead> <tbody> <tr> <td>“chop a tree”</td> <td>나무 개수</td> <td>5.2 ± 2.9</td> <td>약 8.5 (그래프에서 읽은 근사값)</td> </tr> <tr> <td>“get dirt”</td> <td>흙 개수</td> <td>10.7 ± 5.1</td> <td>9.2 (5.7, 12.7)</td> </tr> </tbody> </table> <p>지시문이 다른 대상을 건드리는지도 확인했습니다. “chop a tree”를 시킨 판의 흙은 평균 0.1개, “get dirt”를 시킨 판의 나무는 평균 0.2개였습니다. 시킨 것만 모았다는 뜻입니다.</p> <p>“± 2.9”는 10판만 돌렸기 때문에 생기는 불확실성의 폭입니다. 같은 실험을 다시 하면 평균이 대략 2.3에서 8.1 사이에 올 것이라는 의미로 읽으면 됩니다.</p> <h3 id="판별-값">판별 값</h3> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/steve1_per_seed_chart-480.webp 480w,/assets/img/steve1_per_seed_chart-800.webp 800w,/assets/img/steve1_per_seed_chart-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/steve1_per_seed_chart.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="lazy" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <table> <thead> <tr> <th>seed</th> <th>0</th> <th>1</th> <th>2</th> <th>3</th> <th>4</th> <th>5</th> <th>6</th> <th>7</th> <th>8</th> <th>9</th> </tr> </thead> <tbody> <tr> <td>“chop a tree”</td> <td>3</td> <td>0</td> <td>6</td> <td>2</td> <td>8</td> <td>11</td> <td>12</td> <td>1</td> <td>5</td> <td>4</td> </tr> <tr> <td>“get dirt”</td> <td>4</td> <td>14</td> <td>13</td> <td>18</td> <td>10</td> <td>4</td> <td>7</td> <td>2</td> <td>10</td> <td>25</td> </tr> </tbody> </table> <p>평균만 보면 놓치는 것이 있습니다. 같은 지시문인데도 나무는 0개에서 12개까지, 흙은 2개에서 25개까지 퍼져 있습니다. 가중치도 지시문도 같으니, 이 차이는 시작 월드와 행동을 뽑을 때의 무작위성에서 옵니다.</p> <h2 id="7-해석">7. 해석</h2> <ul> <li> <strong>흙은 재현됐습니다.</strong> 10.7과 9.2는 신뢰구간이 넓게 겹칩니다.</li> <li> <strong>지시문에 따라 수집 대상이 갈리는 성질도 재현됐습니다.</strong> 나무를 시키면 나무만, 흙을 시키면 흙만 모았습니다.</li> <li> <strong>나무는 논문보다 낮습니다.</strong> 신뢰구간은 겹치지만 평균이 5.2와 약 8.5로 차이가 있습니다.</li> </ul> <p>나무가 낮게 나온 이유로 생각해 본 후보입니다. 아직 확인한 것은 없습니다.</p> <table> <thead> <tr> <th>후보</th> <th>근거</th> </tr> </thead> <tbody> <tr> <td>판별 분산</td> <td>10판 중 3판이 0–2개. 판 수가 적어 평균이 흔들림</td> </tr> <tr> <td>목표 벡터 뽑는 빈도</td> <td>4절의 설정 차이</td> </tr> <tr> <td>가중치 이식</td> <td>원본이 아니라 MineStudio가 옮긴 가중치를 사용</td> </tr> <tr> <td>시작 조건</td> <td>forest로 고정했지만 seed마다 나무의 밀도와 거리가 다름</td> </tr> </tbody> </table> <h2 id="8-정리">8. 정리</h2> <ul> <li>공개 가중치와 논문 부록의 설정만으로 20판을 돌려, 흙 수집량과 지시문에 따른 행동 분리를 재현했습니다.</li> <li>나무 수집량은 논문보다 낮았고, 원인은 좁히지 못했습니다.</li> <li>논문에 적히지 않은 설정(시작 지형, 목표 벡터를 뽑는 빈도)이 있어서, 재현할 때는 무엇을 어떻게 정했는지 같이 적어야 합니다.</li> <li>다음 글에서는 STEVE-1 이후에 나온 논문 세 편을 읽고, 무엇을 실험할지 정합니다.</li> </ul> </div> </article> <br> <hr> <br> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <ul class="list-disc pl-7 my-3 space-y-2 marker:text-[var(--global-theme-color)]"> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/steve1-instruction-pilot/">같은 뜻, 다른 문장 — STEVE-1 지시문 바꿔 보기</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/after-steve1-three-papers/">STEVE-1 이후 — GROOT-2, ROCKET-1, CrafText가 본 언어 지시의 한계</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/skill-representations-compared/">Skill이 글 · 코드 · 가중치일 때 — 여섯 편 비교와 다음 실험</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/steve1-text-to-behavior/">STEVE-1 논문 정리 — VPT에 지시문을 듣는 입력을 달다</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/vpt-video-pretraining/">VPT 논문 정리 — 라벨 없는 영상 7만 시간으로 키보드와 마우스를 배우다</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/voyager-code-as-skill/">Voyager 논문 정리 — 성공한 코드를 Skill로 쌓는 에이전트</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/one-word-success-rate/">단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/reflexion-local-ollama/">Reflexion을 맥북 로컬 LLM으로 돌려 보기 — 15판 0승, 그런데 마지막 한 줄만 틀렸다</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/react-reflexion-papers/">ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/alfworld-first-play/">ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지</a> </li> </ul> </div> </div> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Jungmin Cha. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "about",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "post-같은-뜻-다른-문장-steve-1-지시문-바꿔-보기",
+        
+          title: "같은 뜻, 다른 문장 — STEVE-1 지시문 바꿔 보기",
+        
+        description: "나무를 모으라는 지시를 여덟 가지 문장으로 바꿔 STEVE-1에 시켰습니다. 같은 뜻인데 평균 6.0개와 0.4개로 갈렸고, &quot;don&#39;t chop trees&quot;는 나무를 캤습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/steve1-instruction-pilot/";
+          
+        },
+      },{id: "post-steve-1-이후-groot-2-rocket-1-craftext가-본-언어-지시의-한계",
+        
+          title: "STEVE-1 이후 — GROOT-2, ROCKET-1, CrafText가 본 언어 지시의 한계",
+        
+        description: "STEVE-1 이후의 마인크래프트 에이전트 연구를 네 갈래로 나누고, 그중 세 편을 읽어 &quot;말로 시키는 것&quot;의 한계를 각각 어떻게 보았는지 정리했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/after-steve1-three-papers/";
+          
+        },
+      },{id: "post-steve-1을-직접-돌려-논문-숫자-재현하기",
+        
+          title: "STEVE-1을 직접 돌려 논문 숫자 재현하기",
+        
+        description: "공개된 STEVE-1 가중치를 클라우드 GPU에서 실행하고, 논문 부록의 평가 설정을 그대로 따라 나무와 흙 수집량을 다시 측정했습니다. 흙은 재현됐고 나무는 논문보다 낮게 나왔습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/steve1-baseline-reproduction/";
+          
+        },
+      },{id: "post-skill이-글-코드-가중치일-때-여섯-편-비교와-다음-실험",
+        
+          title: "Skill이 글 · 코드 · 가중치일 때 — 여섯 편 비교와 다음 실험...",
+        
+        description: "ReAct, Reflexion, Voyager, VPT, STEVE-1을 한 표에 놓고, Skill의 형태가 바뀌어도 남는 언어–행동 불일치를 정리한 뒤 STEVE-1 지시문 실험을 설계했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/skill-representations-compared/";
+          
+        },
+      },{id: "post-steve-1-논문-정리-vpt에-지시문을-듣는-입력을-달다",
+        
+          title: "STEVE-1 논문 정리 — VPT에 지시문을 듣는 입력을 달다",
+        
+        description: "글 라벨 없이 VPT를 goal-conditioned policy로 fine-tuning한 STEVE-1을 정리하고, 지시문 표현에 따라 성능이 크게 달라지는 한계를 ALFWorld 실험과 나란히 놓았습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/steve1-text-to-behavior/";
+          
+        },
+      },{id: "post-vpt-논문-정리-라벨-없는-영상-7만-시간으로-키보드와-마우스를-배우다",
+        
+          title: "VPT 논문 정리 — 라벨 없는 영상 7만 시간으로 키보드와 마우스를 배우다",
+        
+        description: "소량의 라벨 데이터로 IDM을 만들고, 그 IDM이 인터넷 영상에 행동 라벨을 붙여 behavioral foundation model을 학습한 VPT를 정리했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/vpt-video-pretraining/";
+          
+        },
+      },{id: "post-voyager-논문-정리-성공한-코드를-skill로-쌓는-에이전트",
+        
+          title: "Voyager 논문 정리 — 성공한 코드를 Skill로 쌓는 에이전트",
+        
+        description: "GPT-4가 할 일을 스스로 정하고, 코드를 짜고, 검증된 코드를 skill library에 쌓는 Voyager를 ALFWorld 시리즈와 같은 항목으로 정리했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/voyager-code-as-skill/";
+          
+        },
+      },{id: "post-단어-하나가-바꾼-성공률-reflexion-통제-실험-5-8",
+        
+          title: "단어 하나가 바꾼 성공률 — Reflexion 통제 실험 5–8",
+        
+        description: "같은 모델, 같은 20게임에서 태스크 지시문의 동사 하나를 바꾸자 성공률이 45%에서 80%로, 환경 쪽에서 문법을 번역하자 100%가 됐습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/one-word-success-rate/";
+          
+        },
+      },{id: "post-reflexion을-맥북-로컬-llm으로-돌려-보기-15판-0승-그런데-마지막-한-줄만-틀렸다",
+        
+          title: "Reflexion을 맥북 로컬 LLM으로 돌려 보기 — 15판 0승, 그런데 마지막 한 줄만...",
+        
+        description: "공식 Reflexion 코드의 LLM 호출부만 Ollama + Qwen2.5-7B로 바꿔 ALFWorld를 돌리고, 실패 원인을 통제 실험 네 개로 좁혔습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reflexion-local-ollama/";
+          
+        },
+      },{id: "post-react와-reflexion-논문-정리-생각을-쓰게-하고-실패를-글로-기억하게-하기",
+        
+          title: "ReAct와 Reflexion 논문 정리 — 생각을 쓰게 하고, 실패를 글로 기억하게 하기",
+        
+        description: "ALFWorld 위에서 LLM 에이전트를 만든 두 논문을 같은 틀(데이터, 입력과 출력, SKILL, 평가, 언어적 문제)로 정리했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/react-reflexion-papers/";
+          
+        },
+      },{id: "post-alfworld를-직접-플레이하며-찾은-실패-다섯-가지",
+        
+          title: "ALFWorld를 직접 플레이하며 찾은 실패 다섯 가지",
+        
+        description: "LLM 에이전트를 돌리기 전에, 사람이 먼저 텍스트 게임을 풀어 보며 환경이 어디서 막히는지 기록했습니다.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/alfworld-first-play/";
+          
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/chajm12", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },{
+      id: 'light-theme',
+      title: 'Change theme to light',
+      description: 'Change the theme of the site to Light',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("light");
+      },
+    },
+    {
+      id: 'dark-theme',
+      title: 'Change theme to dark',
+      description: 'Change the theme of the site to Dark',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("dark");
+      },
+    },
+    {
+      id: 'system-theme',
+      title: 'Use system default theme',
+      description: 'Change the theme of the site to System Default',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("system");
+      },
+    },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>
