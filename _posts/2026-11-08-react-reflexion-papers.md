@@ -65,6 +65,33 @@ def alfworld_run(prompt, ob=''):
     return 0
 ```
 
+풀이 예시 하나는 아래처럼 생겼습니다. 공식 프롬프트의 첫 예시를 줄여서 옮긴 것입니다. `>` 뒤가 에이전트가 쓴 줄이고, 그 아래가 게임의 응답입니다.
+
+```text
+You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, ...
+Your task is to: put some spraybottle on toilet.
+> think: To solve the task, I need to find and take a spraybottle, then put it on toilet.
+OK.
+> think: First I need to find a spraybottle. A spraybottle is more likely to appear in cabinet (1-4), countertop (1), ... I can check one by one, starting with cabinet 1.
+OK.
+> go to cabinet 1
+On the cabinet 1, you see a cloth 1, a soapbar 1, a soapbottle 1.
+> go to cabinet 2
+The cabinet 2 is closed.
+> open cabinet 2
+You open the cabinet 2. The cabinet 2 is open. In it, you see a candle 1, and a spraybottle 2.
+> take spraybottle 2 from cabinet 2
+You pick up the spraybottle 2 from the cabinet 2.
+> think: Now I find a spraybottle (2). Next, I need to put it in/on toilet 1.
+OK.
+> go to toilet 1
+On the toilet 1, you see a soapbottle 2.
+> put spraybottle 2 in/on toilet 1
+You put the spraybottle 2 in/on the toilet 1.
+```
+
+생각(`think:`)은 세 번뿐입니다. 시작할 때 목표를 단계로 쪼개고, 어디부터 찾을지 정하고, 물건을 얻은 뒤 다음 단계를 확인합니다. 매 줄마다 생각하지 않는다는 점이 2-3의 ReAct-IM 결과와 이어집니다. 그리고 마지막 줄의 `put … in/on`이 다음 글에서 문제가 되는 문법입니다.
+
 공식 코드에서 ALFWorld 부분은 이 루프와 풀이 예시 파일(`alfworld_3prompts.json`)이 사실상 전부입니다. 예시는 태스크 유형 6가지마다 3개씩 있고, 그중 2개를 고르는 조합 6가지로 돌린 결과 중 가장 좋은 것이 "best of 6"입니다.
 
 ### 2-3. 결과

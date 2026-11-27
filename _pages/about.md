@@ -34,10 +34,16 @@ latest_posts:
     <span class="series-card-title">마인크래프트 에이전트 논문 읽기</span>
     <span class="series-card-desc">Voyager · VPT · STEVE-1을 같은 항목으로 정리하고, Skill이 자연어 · 코드 · 신경망 가중치일 때를 비교한 기록</span>
   </a>
+  <a class="series-card" href="{% post_url 2026-11-22-steve1-baseline-reproduction %}">
+    <span class="series-card-label">Series 3 · 3편</span>
+    <span class="series-card-title">STEVE-1 직접 돌려 보기</span>
+    <span class="series-card-desc">공개 가중치로 논문 숫자를 재현하고, 이후에 나온 논문 세 편을 읽은 뒤, 같은 일을 여덟 가지 문장으로 시켜 행동이 어떻게 달라지는지 확인한 기록</span>
+  </a>
 </div>
 
 ## 지금 보고 있는 것
 
 - **Skill의 표현 방식** — 자연어 메모(Reflexion), 실행 코드(Voyager), 신경망 가중치(VPT · STEVE-1)
 - **언어–행동 불일치** — 지시문의 단어 하나가 성공률을 바꾸는 현상과 그 원인
-- **다음 실험** — STEVE-1에서 같은 일을 다른 문장으로 시켰을 때 행동이 얼마나 달라지는지
+- **STEVE-1 지시문 실험** — 같은 뜻의 지시문 사이에서 나무 수집량이 평균 0.4개에서 6.0개까지 갈렸고, "don't chop trees"는 나무를 캤습니다. 지시문마다 5판인 예비 실험입니다
+- **다음** — 판 수를 늘리고, 다른 과제와 다른 부정 표현으로 넓혀 원인을 확인하기
